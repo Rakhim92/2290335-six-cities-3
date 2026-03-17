@@ -1,16 +1,13 @@
-import Header from '../header/header';
+import {BrowserRouter, Route, Routes, Link} from 'react-router-dom';
 import Main from '../../pages/main/main';
 
-type AppProps = {
+type AppScreenProps = {
   numberOfPlaces: number;
 }
 
-function App({numberOfPlaces}: AppProps): JSX.Element {
+function App({numberOfPlaces}: AppScreenProps): JSX.Element {
   return (
-    <div className="page page--gray page--main">
-      <Header/>
-      <Main numberOfPlaces = {numberOfPlaces}/>
-    </div>
+    <Main numberOfPlaces = {numberOfPlaces}/>
   );
 }
 

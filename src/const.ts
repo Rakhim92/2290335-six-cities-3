@@ -2,7 +2,22 @@ const Settings = {
   NUMBER_OF_PLACES : 312,
 };
 
-const products = [
+enum AppRoute {
+  Root = '/',
+  Login = '/login',
+  Offer = '/offer',
+  Favorites = '/favorites',
+}
+
+enum AuthorizationStatus {
+  Auth = 'AUTH',
+  NoAuth = 'NO_AUTH',
+  Unknown = 'UNKNOWN',
+}
+
+const cities = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];
+
+const cards = [
   {
     id: 1,
     name: 'Beautiful &amp; luxurious apartment at great location',
@@ -41,4 +56,4 @@ const products = [
   },
 ];
 
-export {products, Settings};
+export {cards, Settings, cities, AppRoute, AuthorizationStatus};

@@ -1,5 +1,5 @@
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import {AppRoute, AuthorizationStatus} from '../../const.ts';
+import {AppRoute, getAuthorizationStatus} from '../../const.ts';
 import Main from '../../pages/main-page/main-page';
 import Login from '../../pages/login-page/login-page.tsx';
 import Favorites from '../../pages/favorites-page/favorites-page.tsx';
@@ -20,7 +20,7 @@ function App({numberOfPlaces}: AppScreenProps): JSX.Element {
           <Route index element={<Main numberOfPlaces = {numberOfPlaces}/>}/>
           <Route path={AppRoute.Login} element={<Login/>}/>
           <Route path={AppRoute.Favorites} element={
-            <PrivateRoute authorizationStatus={AuthorizationStatus.NoAuth}><Favorites/></PrivateRoute>
+            <PrivateRoute authorizationStatus={getAuthorizationStatus()}><Favorites/></PrivateRoute>
           }
           />
           <Route path={AppRoute.Offer} element={<Offer/>}/>

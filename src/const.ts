@@ -15,6 +15,8 @@ enum AuthorizationStatus {
   Unknown = 'UNKNOWN',
 }
 
+const getAuthorizationStatus = () => AuthorizationStatus.Auth;
+
 const cities = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];
 
 const cards = [
@@ -56,4 +58,4 @@ const cards = [
   },
 ];
 
-export {cards, Settings, cities, AppRoute, AuthorizationStatus};
+export {cards, Settings, cities, AppRoute, AuthorizationStatus, getAuthorizationStatus};

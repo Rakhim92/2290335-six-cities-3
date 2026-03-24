@@ -1,4 +1,4 @@
-type OfferType = {
+export type TOffer = {
   id: number;
   name: string;
   url: string;
@@ -9,20 +9,17 @@ type OfferType = {
   rating: number;
 }
 
-type AppScreenProps = {
-  numberOfPlaces: number;
-  offers: OfferType[];
+export type TOfferProps = {
+  offers: TOffer[];
 }
 
-// {
-//   id: number;
-//   name: string;
-//   url: string;
-//   price: number;
-//   isPremium: boolean;
-//   isFavorite: boolean;
-//   type: string;
-//   rating: number;
-// };
+export type TOfferComplex = {
+  offer: TOffer;
+  handleHover: (offer?:TOffer) => void;
+}
 
-export type {OfferType, AppScreenProps};
+export type TScreenProps = {
+  numberOfPlaces: number;
+  offers: TOffer[];
+}
+

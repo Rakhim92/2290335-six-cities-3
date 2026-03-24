@@ -1,15 +1,6 @@
-type cardType = {
-  id: number;
-  name: string;
-  url: string;
-  price: number;
-  isPremium: boolean;
-  isFavorite: boolean;
-  type: string;
-  rating: number;
-}
+import {TOffer} from '../../../types';
 
-const FavoriteCard = ({id, name, url, price, isPremium, isFavorite, type, rating}: cardType) => (
+const FavoriteCard = ({id, name, url, price, isPremium, isFavorite, type, rating}: TOffer) => (
   <article className="favorites__card place-card" key={id}>
     {isPremium ?
       <div className="place-card__mark">

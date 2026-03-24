@@ -1,29 +1,34 @@
+import {useParams} from 'react-router-dom';
 import {AuthorizationStatus, getAuthorizationStatus} from '../../const';
+import {TOffer, TOfferProps} from '../../types';
+import NotFoundedPage from '../not-founded-page/not-founded-page';
 import NearPlacesSection from './components/near-places-section';
 
-function Offer():JSX.Element {
-  return (
+function OfferPage({offers}: TOfferProps):JSX.Element {
+  const params = useParams();
+  const selectedOffer = offers.find((item) => item.id === Number(params.id)) as TOffer;
+  return selectedOffer ? (
     <main className="page__main page__main--offer">
       <section className="offer">
         <div className="offer__gallery-container container">
           <div className="offer__gallery">
             <div className="offer__image-wrapper">
-              <img className="offer__image" src="img/room.jpg" alt="Photo studio"></img>
+              <img className="offer__image" src={selectedOffer.url} alt="Photo studio"></img>
             </div>
             <div className="offer__image-wrapper">
-              <img className="offer__image" src="img/apartment-01.jpg" alt="Photo studio"></img>
+              <img className="offer__image" src={selectedOffer.url} alt="Photo studio"></img>
             </div>
             <div className="offer__image-wrapper">
-              <img className="offer__image" src="img/apartment-02.jpg" alt="Photo studio"></img>
+              <img className="offer__image" src={selectedOffer.url} alt="Photo studio"></img>
             </div>
             <div className="offer__image-wrapper">
-              <img className="offer__image" src="img/apartment-03.jpg" alt="Photo studio"></img>
+              <img className="offer__image" src={selectedOffer.url} alt="Photo studio"></img>
             </div>
             <div className="offer__image-wrapper">
-              <img className="offer__image" src="img/studio-01.jpg" alt="Photo studio"></img>
+              <img className="offer__image" src={selectedOffer.url} alt="Photo studio"></img>
             </div>
             <div className="offer__image-wrapper">
-              <img className="offer__image" src="img/apartment-01.jpg" alt="Photo studio"></img>
+              <img className="offer__image" src={selectedOffer.url} alt="Photo studio"></img>
             </div>
           </div>
         </div>
@@ -34,7 +39,7 @@ function Offer():JSX.Element {
             </div>
             <div className="offer__name-wrapper">
               <h1 className="offer__name">
-                Beautiful &amp; luxurious studio at great location
+                {selectedOffer.name}
               </h1>
               <button className="offer__bookmark-button button" type="button">
                 <svg className="offer__bookmark-icon" width="31" height="33">
@@ -52,7 +57,7 @@ function Offer():JSX.Element {
             </div>
             <ul className="offer__features">
               <li className="offer__feature offer__feature--entire">
-                Apartment
+                {selectedOffer.type}
               </li>
               <li className="offer__feature offer__feature--bedrooms">
                 3 Bedrooms
@@ -62,7 +67,7 @@ function Offer():JSX.Element {
               </li>
             </ul>
             <div className="offer__price">
-              <b className="offer__price-value">&euro;120</b>
+              <b className="offer__price-value">&euro;{selectedOffer.price}</b>
               <span className="offer__price-text">&nbsp;night</span>
             </div>
             <div className="offer__inside">
@@ -203,7 +208,9 @@ function Offer():JSX.Element {
       </section>
       <NearPlacesSection/>
     </main>
+  ) : (
+    <NotFoundedPage/>
   );
 }
 
-export default Offer;
+export default OfferPage;

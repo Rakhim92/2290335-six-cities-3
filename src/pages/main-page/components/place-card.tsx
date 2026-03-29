@@ -1,27 +1,27 @@
-type cardType = {
-  data: {
-    id: number;
-    name: string;
-    url: string;
-    price: number;
-    isPremium: boolean;
-    isFavorite: boolean;
-    type: string;
-  };
-}
+import {Link} from 'react-router-dom';
+import {AppRoute} from '../../../const';
+import {TOfferComplex} from '../../../types';
 
-function PlaceCard(props: cardType) {
-  const {id, name, url, price, isPremium, isFavorite, type} = props.data;
+function PlaceCard(props: TOfferComplex) {
+
+  const {id, name, url, price, isPremium, isFavorite, type, rating} = props.offer;
+  const handleHover = props.handleHover;
+  const handleMouseOn = () => {
+    handleHover(props.offer);
+  };
+  const handleMouseOff = () => {
+    handleHover();
+  };
   return (
-    <article className="cities__card place-card" key={id}>
+    <article className="cities__card place-card" key={id} onMouseEnter={handleMouseOn} onMouseLeave={handleMouseOff}>
       {isPremium ?
         <div className="place-card__mark">
           <span>Premium</span>
         </div> : ''}
       <div className="cities__image-wrapper place-card__image-wrapper">
-        <a href="#">
+        <Link to={`${AppRoute.Offer}/${id}`}>
           <img className="place-card__image" src={url} width="260" height="200" alt="Place image"></img>
-        </a>
+        </Link>
       </div>
       <div className="place-card__info">
         <div className="place-card__price-wrapper">
@@ -38,7 +38,7 @@ function PlaceCard(props: cardType) {
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{width: '80%'}}></span>
+            <span style={{width: `${Math.round(rating) * 20}%`}}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>

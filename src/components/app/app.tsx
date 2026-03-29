@@ -1,28 +1,38 @@
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import {AppRoute, AuthorizationStatus} from '../../const.ts';
-import Main from '../../pages/main/main';
-import Login from '../../pages/login/login';
-import Favorites from '../../pages/favorites/favorites';
-import Offer from '../../pages/offer/offer';
+import {AppRoute, getAuthorizationStatus} from '../../const.ts';
+import MainPage from '../../pages/main-page/main-page';
+import LoginPage from '../../pages/login-page/login-page.tsx';
+import FavoritePage from '../../pages/favorite-page/favorite-page.tsx';
+import OfferPage from '../../pages/offer-page/offer-page.tsx';
 import PrivateRoute from '../private-route/private-route.tsx';
 import NotFoundedPage from '../../pages/not-founded-page/not-founded-page.tsx';
+import Layout from '../layout/layout.tsx';
+import {TScreenProps} from '../../types.ts';
 
-type AppScreenProps = {
-  numberOfPlaces: number;
-}
 
-function App({numberOfPlaces}: AppScreenProps): JSX.Element {
+function App({numberOfPlaces, offers}: TScreenProps): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path={AppRoute.Root} element={<Main numberOfPlaces = {numberOfPlaces}/>}/>
-        <Route path={AppRoute.Login} element={<Login/>}/>
-        <Route path={AppRoute.Favorites} element={
-          <PrivateRoute authorizationStatus={AuthorizationStatus.NoAuth}><Favorites/></PrivateRoute>
-        }
-        />
-        <Route path={AppRoute.Offer} element={<Offer/>}/>
-        <Route path='*' element={<NotFoundedPage/>}/>
+        <Route path={AppRoute.Root} element={<Layout/>}>
+          <Route index
+            element={<MainPage numberOfPlaces = {numberOfPlaces} offers = {offers}/>}
+          />
+          <Route path={AppRoute.Login}
+            element={<LoginPage/>}
+          />
+          <Route path={AppRoute.Offer}>
+            <Route path=":id"
+              element={<OfferPage offers = {offers} />}
+            />
+          </Route>
+          <Route path={AppRoute.Favorite}
+            element={<PrivateRoute authorizationStatus={getAuthorizationStatus()}><FavoritePage offers = {offers}/></PrivateRoute>}
+          />
+          <Route path='*'
+            element={<NotFoundedPage/>}
+          />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

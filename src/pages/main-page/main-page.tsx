@@ -1,9 +1,9 @@
 import {cities} from '../../const';
-import {TScreenProps} from '../../types';
+import {TOfferProps} from '../../types';
 import PlaceCardsList from './components/place-cards-list';
 
 
-function MainPage ({numberOfPlaces, offers}: TScreenProps): JSX.Element {
+function MainPage ({offers}: TOfferProps): JSX.Element {
   return (
     <main className="page__main page__main--index">
       <h1 className="visually-hidden">Cities</h1>
@@ -24,7 +24,7 @@ function MainPage ({numberOfPlaces, offers}: TScreenProps): JSX.Element {
         <div className="cities__places-container container">
           <section className="cities__places places">
             <h2 className="visually-hidden">Places</h2>
-            <b className="places__found">{numberOfPlaces} places to stay in Amsterdam</b>
+            <b className="places__found">{offers.length} places to stay in Amsterdam</b>
             <form className="places__sorting" action="#" method="get">
               <span className="places__sorting-caption">Sort by</span>
               <span className="places__sorting-type" tabIndex={0}>

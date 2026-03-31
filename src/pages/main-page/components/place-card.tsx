@@ -4,7 +4,7 @@ import {TOfferComplex} from '../../../types';
 
 function PlaceCard(props: TOfferComplex) {
 
-  const {id, name, url, price, isPremium, isFavorite, type, rating} = props.offer;
+  const {id, title, previewImage, price, isPremium, isFavorite, type, rating} = props.offer;
   const handleHover = props.handleHover;
   const handleMouseOn = () => {
     handleHover(props.offer);
@@ -20,7 +20,7 @@ function PlaceCard(props: TOfferComplex) {
         </div> : ''}
       <div className="cities__image-wrapper place-card__image-wrapper">
         <Link to={`${AppRoute.Offer}/${id}`}>
-          <img className="place-card__image" src={url} width="260" height="200" alt="Place image"></img>
+          <img className="place-card__image" src={previewImage} width="260" height="200" alt="Place image"></img>
         </Link>
       </div>
       <div className="place-card__info">
@@ -43,7 +43,7 @@ function PlaceCard(props: TOfferComplex) {
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href="#">{name}</a>
+          <a href="#">{title}</a>
         </h2>
         <p className="place-card__type">{type}</p>
       </div>

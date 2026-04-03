@@ -31,6 +31,11 @@ export type TOfferComplex = {
   handleHover: (offer?:TOffer) => void;
 }
 
+export type TOfferComplexSecond = {
+  offers: TOffer[];
+  handleHover: (offer?:TOffer) => void;
+}
+
 export type City = {
   title: string;
   lat: number;

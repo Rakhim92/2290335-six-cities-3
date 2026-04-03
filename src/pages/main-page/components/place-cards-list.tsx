@@ -1,13 +1,7 @@
-import {TOffer, TOfferProps} from '../../../types';
-import {Nullable} from 'vitest';
-import {useState} from 'react';
+import {TOffer, TOfferComplexSecond} from '../../../types';
 import PlaceCard from './place-card';
 
-function PlaceCardsList({offers}: TOfferProps) {
-  const [activeOffer, setActiveOffer] = useState<Nullable<TOffer>>(null);
-  const handleHover = (offer?: TOffer) => {
-    setActiveOffer(offer);
-  };
+function PlaceCardsList({offers, handleHover}: TOfferComplexSecond) {
   return (
     <div className="cities__places-list places__list tabs__content">
       {offers.map((offer: TOffer) => (

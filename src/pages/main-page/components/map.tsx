@@ -29,31 +29,31 @@ function Map(props: MapProps): JSX.Element {
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
 
-  useEffect(() => {
-    if (map) {
-      const markerLayer = layerGroup().addTo(map);
-      offers.forEach((offer) => {
-        const marker = new Marker({
-          lat: offer.lat,
-          lng: offer.lng
-        });
+  // useEffect(() => {
+  //   if (map) {
+  //     const markerLayer = layerGroup().addTo(map);
+  //     offers.forEach((offer) => {
+  //       const marker = new Marker({
+  //         lat: offer.lat,
+  //         lng: offer.lng
+  //       });
 
-        marker
-          .setIcon(
-            selectedPoint !== undefined && offer.title === selectedPoint.title
-              ? currentCustomIcon
-              : defaultCustomIcon
-          )
-          .addTo(markerLayer);
-      });
+  //       marker
+  //         .setIcon(
+  //           selectedPoint !== undefined && offer.title === selectedPoint.title
+  //             ? currentCustomIcon
+  //             : defaultCustomIcon
+  //         )
+  //         .addTo(markerLayer);
+  //     });
 
-      return () => {
-        map.removeLayer(markerLayer);
-      };
-    }
-  }, [map, offers, selectedPoint]);
+  //     return () => {
+  //       map.removeLayer(markerLayer);
+  //     };
+  //   }
+  // }, [map, offers, selectedPoint]);
 
-  return <section className="cities__map map" style={{height: '500px'}} ref={mapRef}></section>;
+  return <section className="cities__map map" style={{height: '740px'}} ref={mapRef}></section>;
 }
 
 export default Map;

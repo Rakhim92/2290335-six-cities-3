@@ -1,14 +1,20 @@
 import CitiesList from './components/cities-list';
-import {TOfferProps} from '../../types';
+import {TOfferProps, TOffer} from '../../types';
 import PlaceCardsList from './components/place-cards-list';
+import {Nullable} from 'vitest';
+import {useState} from 'react';
 import Map from './components/map';
 
 function MainPage ({offers}: TOfferProps): JSX.Element {
+  const [activeOffer, setActiveOffer] = useState<Nullable<TOffer>>(null);
+  const handleHover = (offer?: TOffer) => {
+    setActiveOffer(offer);
+  };
   const city = {
     title: offers[0].city.name,
     lat: offers[0].city.location.latitude,
     lng: offers[0].city.location.longitude,
-    zoom: offers[0].city.location.zoom
+    zoom: 15
   };
 
   return (
@@ -37,10 +43,10 @@ function MainPage ({offers}: TOfferProps): JSX.Element {
                 <li className="places__option" tabIndex={0}>Top rated first</li>
               </ul>
             </form>
-            <PlaceCardsList offers={offers}/>
+            <PlaceCardsList offers={offers} handleHover={handleHover}/>
           </section>
           <div className="cities__right-section">
-            {/* <Map offers={offers} city={city}/> */}
+            <Map offers={offers} city={city} selectedPoint={activeOffer}/>
           </div>
         </div>
       </div>

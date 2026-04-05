@@ -1,7 +1,6 @@
 import FavoriteCard from './components/favorite-card';
 import {TOfferProps} from '../../types';
-
-const favoriteCities = ['Amsterdam'];
+import {CITIES_MOCK} from '../../const';
 
 const FavoritePage = ({offers}: TOfferProps): JSX.Element => (
   <main className="page__main page__main--favorites">
@@ -9,12 +8,12 @@ const FavoritePage = ({offers}: TOfferProps): JSX.Element => (
       <section className="favorites">
         <h1 className="favorites__title">Saved listing</h1>
         <ul className="favorites__list">
-          {favoriteCities.map((favoriteCity) => (
-            <li className="favorites__locations-items" key={favoriteCity}>
+          {CITIES_MOCK.map((favoriteCity) => (
+            <li className="favorites__locations-items" key={favoriteCity.name}>
               <div className="favorites__locations locations locations--current">
                 <div className="locations__item">
                   <a className="locations__item-link" href="#">
-                    <span>{favoriteCity}</span>
+                    <span>{favoriteCity.name}</span>
                   </a>
                 </div>
               </div>

@@ -39,7 +39,7 @@ function Map(props: MapProps): JSX.Element {
 
         marker
           .setIcon(
-            selectedPoint !== null && offer.title === selectedPoint.title
+            !!selectedPoint && offer.title === selectedPoint.title
               ? currentCustomIcon
               : defaultCustomIcon
           )
@@ -52,7 +52,7 @@ function Map(props: MapProps): JSX.Element {
     }
   }, [map, offers, selectedPoint]);
 
-  return <section className="cities__map map" style={{height: '740px'}} ref={mapRef}></section>;
+  return <section className="cities__map map" style={{height: '740px'}} ref={mapRef}/>;
 }
 
 export default Map;

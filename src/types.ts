@@ -6,9 +6,9 @@ export type TOffer = {
   city: {
     name: string;
     location: {
-    latitude: number;
-    longitude: number;
-    zoom: number;
+      latitude: number;
+      longitude: number;
+      zoom: number;
     };
   };
   location: {
@@ -41,12 +41,41 @@ export type City = {
   lat: number;
   lng: number;
   zoom: number;
+  name: string;
+  location: {
+      latitude: number;
+      longitude: number;
+      zoom: number;
+    };
 };
+
+export type CityFromServer = {
+  name: string;
+  location: {
+    latitude: number;
+    longitude: number;
+    zoom: number;
+  };
+};
+
+export type TCityLeaflet = {
+  title: string;
+  lat: number;
+  lng: number;
+  zoom : number;
+}
 
 export type Point = {
   title: string;
   lat: number;
   lng: number;
+  zoom : number;
+  name?: string;
+  location?: {
+    latitude: number;
+    longitude: number;
+    zoom: number;
+  };
 };
 
 export type Points = Point[];
@@ -54,6 +83,6 @@ export type Points = Point[];
 export type MapProps = {
   city: City;
   offers: TOffer[];
-  selectedPoint: Point | undefined;
+  selectedPoint?: TOffer;
 };
 

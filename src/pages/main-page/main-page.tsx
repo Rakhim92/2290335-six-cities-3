@@ -1,21 +1,31 @@
-import CitiesList from './components/cities-list';
-import {TOfferProps, TOffer} from '../../types';
-import PlaceCardsList from './components/place-cards-list';
-import {Nullable} from 'vitest';
 import {useState} from 'react';
+import {TOfferProps, TOffer, City, CityFromServer, Point, TCityLeaflet} from '../../types';
+import {CITIES_MOCK} from '../../const';
+import CitiesList from './components/cities-list';
+import PlaceCardsList from './components/place-cards-list';
 import Map from './components/map';
 
 function MainPage ({offers}: TOfferProps): JSX.Element {
-  const [activeOffer, setActiveOffer] = useState<Nullable<TOffer>>(null);
+  const [activeOffer, setActiveOffer] = useState<TOffer>();
   const handleHover = (offer?: TOffer) => {
     setActiveOffer(offer);
   };
-  const city = {
-    title: offers[0].city.name,
-    lat: offers[0].city.location.latitude,
-    lng: offers[0].city.location.longitude,
-    zoom: 20
+
+  const cityMockAmsterdam: CityFromServer | City = CITIES_MOCK[3];
+  const adaptToMap = (city: City) => {
+    const adaptedCity:Point = {...city,
+      'title': city.name,
+      'lat': city.location.latitude,
+      'lng': city.location.longitude,
+      'zoom': city.location.zoom
+    };
+
+    delete adaptedCity.name;
+    delete adaptedCity.location;
+
+    return adaptedCity;
   };
+  const lol:TCityLeaflet = adaptToMap(cityMockAmsterdam);
 
   return (
     <main className="page__main page__main--index">
@@ -46,7 +56,7 @@ function MainPage ({offers}: TOfferProps): JSX.Element {
             <PlaceCardsList offers={offers} handleHover={handleHover}/>
           </section>
           <div className="cities__right-section">
-            <Map offers={offers} city={city} selectedPoint={activeOffer }/>
+            <Map offers={offers} city={lol} selectedPoint={activeOffer }/>
           </div>
         </div>
       </div>

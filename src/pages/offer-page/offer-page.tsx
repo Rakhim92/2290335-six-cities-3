@@ -7,7 +7,7 @@ import NotFoundedPage from '../not-founded-page/not-founded-page';
 import ReviewsSection from './components/reviews-section/reviews-section';
 import NearPlacesSection from './components/near-places-section';
 import Map from '../../components/map/map';
-import {CITIES_MOCK} from '../../const';
+import {CITIES_MOCK, ClassNamesForMap} from '../../const';
 
 const SELECTED_OFFER_IMAGES_ARRAY_LENGTH = 4;
 
@@ -82,7 +82,7 @@ function OfferPage({offers, comments}: TOffersCommentsProps):JSX.Element {
             <ReviewsSection comments = {comments}/>
           </div>
         </div>
-        <Map offers={offers} city={cityMockAmsterdam} selectedOffer = {selectedOffer}/>
+        <Map offers={offers} city={cityMockAmsterdam} selectedOffer = {selectedOffer} ClassNamesForMap = {ClassNamesForMap.Offer}/>
       </section>
       <NearPlacesSection handleHover = {handleHover} offers = {offers}/>
     </main>

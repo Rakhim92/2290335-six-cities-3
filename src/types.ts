@@ -64,6 +64,7 @@ export type Points = Point[];
 export type MapProps = {
   city: City;
   offers: TOffer[];
+  ClassNamesForMap: string;
   selectedPoint?: TOffer;
   selectedOffer?: TOffer;
 };

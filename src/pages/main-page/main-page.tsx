@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {TOfferProps, TOffer, City} from '../../types';
-import {CITIES_MOCK} from '../../const';
+import {CITIES_MOCK, ClassNamesForMap} from '../../const';
 import CitiesList from './components/cities-list';
 import PlaceCardsList from '../../components/place-card/place-cards-list';
 import Map from '../../components/map/map';
@@ -42,7 +42,7 @@ function MainPage ({offers}: TOfferProps): JSX.Element {
             <PlaceCardsList offers={offers} handleHover={handleHover}/>
           </section>
           <div className="cities__right-section">
-            <Map offers={offers} city={cityMockAmsterdam} selectedPoint={activeOffer }/>
+            <Map offers={offers} city={cityMockAmsterdam} selectedPoint={activeOffer} ClassNamesForMap = {ClassNamesForMap.Root}/>
           </div>
         </div>
       </div>

@@ -1,12 +1,22 @@
 import {classNamesForMap} from '../../const';
-import {TOfferProps} from '../../types';
+import {TOfferProps, TOffer} from '../../types';
 import CitiesList from './components/cities-list';
 import PlaceCardsList from '../../components/place-card/place-cards-list';
 import Map from '../../components/map/map';
 import {useAppSelector} from '../../hooks';
+import {useState} from 'react';
+import {useAppDispatch} from '../../hooks';
+import {changeCurrentCity} from '../../store/action';
 
 function MainPage ({offers}: TOfferProps): JSX.Element {
-  const activeOffer = useAppSelector((state) => state.currentCity);
+  const dispatch = useAppDispatch();
+  const currentCity = useAppSelector((state) => state.currentCity);
+  // const cityOffers = useAppSelector((state) => state.cityOffers);
+  const [activeOffer, setActiveOffer] = useState<TOffer>();
+  const handleHover = (offer?: TOffer) => {
+    setActiveOffer(offer);
+  };
+
 
   return (
     <main className="page__main page__main--index">
@@ -37,12 +47,13 @@ function MainPage ({offers}: TOfferProps): JSX.Element {
             <PlaceCardsList
               type = {'root'}
               offers={offers}
+              handleHover={handleHover}
             />
           </section>
           <div className="cities__right-section">
             <Map
               offers={offers}
-              city={activeOffer}
+              city={currentCity}
               selectedPoint={activeOffer}
               classNamesForMap = {classNamesForMap.Root}
             />

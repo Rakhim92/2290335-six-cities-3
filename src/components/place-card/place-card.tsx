@@ -1,46 +1,58 @@
 import {Link} from 'react-router-dom';
 import {AppRoute} from '../../const';
 import {TOffer} from '../../types';
-import {useAppDispatch} from '../../hooks';
-import {changeCurrentCity} from '../../store/action';
 
 type TPlaceCardProps = {
   typeClassName: 'root' | 'offer' | 'favorites';
   offer: TOffer;
+  handleHover: (offer?:TOffer) => void;
 }
 
-function PlaceCard({typeClassName, offer}: TPlaceCardProps) {
-  const dispatch = useAppDispatch();
-  let className;
+const getClassName = (typeClassName: string) => {
+  switch (true) {
+    case typeClassName === 'root':
+      return 'cities';
+    case typeClassName === 'offer':
+      return 'near-places';
+    case typeClassName === 'favorites':
+      return 'favorites';
+    default:
+      return '';
+  }
+};
+
+
+function PlaceCard({typeClassName, offer, handleHover}: TPlaceCardProps) {
+  const {id, title, previewImage, price, isPremium, isFavorite, type, rating} = offer;
+  const handleMouseOn = () => {
+    handleHover(offer);
+  };
   let widthPictureCardImage = 260;
   let heigthPictureCardImage = 200;
-  switch (true) {
-    case typeClassName === 'root': className = 'cities';
-      break;
-    case typeClassName === 'offer': className = 'near-places';
-      break;
-    case typeClassName === 'favorites': className = 'favorites';
-      widthPictureCardImage = 150;
-      heigthPictureCardImage = 110;
-      break;
+  if (typeClassName === 'favorites') {
+    widthPictureCardImage = 150;
+    heigthPictureCardImage = 110;
   }
 
-  const {id, title, previewImage, price, isPremium, isFavorite, type, rating} = offer;
-
   return (
-    <article className={`${className}__card place-card`}
-      key={id} onMouseEnter={() => dispatch(changeCurrentCity(offer))}
+    <article className={`${getClassName(typeClassName)}__card place-card`}
+      key={id} onMouseEnter={handleMouseOn}
     >
       {isPremium &&
         <div className="place-card__mark">
           <span>Premium</span>
         </div>}
-      <div className={`${className}__image-wrapper place-card__image-wrapper`}>
+      <div className={`${getClassName(typeClassName)}__image-wrapper place-card__image-wrapper`}>
         <Link to={`${AppRoute.Offer}/${id}`}>
-          <img className="place-card__image" src={previewImage} width={widthPictureCardImage} height={heigthPictureCardImage} alt="Place image"></img>
+          <img className="place-card__image"
+            src={previewImage}
+            width={widthPictureCardImage}
+            height={heigthPictureCardImage}
+            alt="Place image"
+          />
         </Link>
       </div>
-      <div className={`${className}__card-info place-card__info`}>
+      <div className={`${getClassName(typeClassName)}__card-info place-card__info`}>
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
             <b className="place-card__price-value">&euro;{price}</b>

@@ -1,9 +1,9 @@
 import {useState} from 'react';
 import PlaceCardsList from '../../components/place-card/place-cards-list';
 import {TOffer} from '../../types';
-import {CITIES_MOCK} from '../../const';
+import {MY_CITIES} from '../../const';
 
-const MOCK_AMSTERDAM = [CITIES_MOCK[3]];
+const MOCK_AMSTERDAM = [MY_CITIES[3]];
 
 type TFavoritePageProps = {
   offers: TOffer[];

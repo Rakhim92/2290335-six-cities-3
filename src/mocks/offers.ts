@@ -1,4 +1,5 @@
 import {TOffer} from '../types';
+import {MY_CITIES} from '../const';
 
 const offers: TOffer[] = [
   {
@@ -6,14 +7,7 @@ const offers: TOffer[] = [
     title: 'Beautiful &amp; luxurious apartment at great location',
     type: 'Apartment',
     price: 120,
-    city: {
-      name: 'Amsterdam',
-      location: {
-        latitude: 52.35514938496378,
-        longitude: 4.673877537499948,
-        zoom: 8
-      }
-    },
+    city: MY_CITIES[3],
     location: {
       latitude: 52.3909553943508,
       longitude: 4.85309666406198,
@@ -29,14 +23,7 @@ const offers: TOffer[] = [
     title: 'Wood and stone place',
     type: 'Room',
     price: 80,
-    city: {
-      name: 'Amsterdam',
-      location: {
-        latitude: 52.35514938496378,
-        longitude: 4.673877537499948,
-        zoom: 8
-      }
-    },
+    city: MY_CITIES[3],
     location: {
       latitude: 52.3609553943508,
       longitude: 4.85309666406198,
@@ -52,14 +39,7 @@ const offers: TOffer[] = [
     title: 'Canal View Prinsengracht',
     type: 'Apartment',
     price: 132,
-    city: {
-      name: 'Amsterdam',
-      location: {
-        latitude: 52.35514938496378,
-        longitude: 4.673877537499948,
-        zoom: 8
-      }
-    },
+    city: MY_CITIES[0],
     location: {
       latitude: 52.3909553943508,
       longitude: 4.929309666406198,
@@ -75,14 +55,7 @@ const offers: TOffer[] = [
     title: 'Nice, cozy, warm big bed apartment',
     type: 'Apartment',
     price: 180,
-    city: {
-      name: 'Amsterdam',
-      location: {
-        latitude: 52.35514938496378,
-        longitude: 4.673877537499948,
-        zoom: 8
-      }
-    },
+    city: MY_CITIES[0],
     location: {
       latitude: 52.3809553943508,
       longitude: 4.939309666406198,

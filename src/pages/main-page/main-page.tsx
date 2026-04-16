@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {TOfferProps, TOffer, City} from '../../types';
-import {CITIES_MOCK, classNamesForMap} from '../../const';
+import {MY_CITIES, classNamesForMap} from '../../const';
 import CitiesList from './components/cities-list';
 import PlaceCardsList from '../../components/place-card/place-cards-list';
 import Map from '../../components/map/map';
@@ -10,8 +10,8 @@ function MainPage ({offers}: TOfferProps): JSX.Element {
   const handleHover = (offer?: TOffer) => {
     setActiveOffer(offer);
   };
-  // Мокковый Амстердам
-  const cityMockAmsterdam: City = CITIES_MOCK[3];
+
+  const cityMockAmsterdam: City = MY_CITIES[3];
 
   return (
     <main className="page__main page__main--index">

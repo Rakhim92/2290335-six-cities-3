@@ -4,7 +4,7 @@ import {offers} from '../mocks/offers';
 import {MY_CITIES} from '../const';
 
 const initialState = {
-  currentCity: MY_CITIES[3],
+  currentCity: MY_CITIES[0],
   cityOffers: offers.filter((offer) => offer.city.name === MY_CITIES[3].name),
 };
 

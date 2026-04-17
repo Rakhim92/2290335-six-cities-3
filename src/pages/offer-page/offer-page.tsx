@@ -1,3 +1,4 @@
+import {useState} from 'react';
 import {useAppSelector} from '../../hooks';
 import {useParams} from 'react-router-dom';
 import {TOffer, TOfferExtended, TComment} from '../../types';
@@ -16,7 +17,11 @@ type TComplicatedProps = {
 }
 
 function OfferPage({extendedOffers, otherOffers, comments}: TComplicatedProps):JSX.Element {
-  const activeOffer = useAppSelector((state) => state.currentCity);
+  const [activeOffer, setActiveOffer] = useState<TOffer>();
+  const handleHover = (offer?: TOffer) => {
+    setActiveOffer(offer);
+  };
+  const currentCity = useAppSelector((state) => state.currentCity);
 
   const params = useParams();
   const selectedOffer = extendedOffers.find((item) => item.id === Number(params.id)) as TOfferExtended;
@@ -76,12 +81,13 @@ function OfferPage({extendedOffers, otherOffers, comments}: TComplicatedProps):J
         </div>
         <Map
           offers = {otherOffers}
-          city = {activeOffer}
+          city = {currentCity}
           selectedPoint = {activeOffer}
           classNamesForMap = {classNamesForMap.Offer}
         />
       </section>
       <NearPlacesSection
+        handleHover = {handleHover}
         otherOffers = {otherOffers}
       />
     </main>

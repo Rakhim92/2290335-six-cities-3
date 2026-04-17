@@ -1,7 +1,7 @@
 import {MY_CITIES} from '../../../const';
 import {useAppDispatch} from '../../../hooks';
 import {changeCurrentCity} from '../../../store/action';
-import {City} from '../../../types';
+// import {City} from '../../../types';
 
 const CitiesList = () => {
   const dispatch = useAppDispatch();

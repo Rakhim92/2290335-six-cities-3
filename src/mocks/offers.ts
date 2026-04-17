@@ -66,6 +66,38 @@ const offers: TOffer[] = [
     rating: 3.8,
     previewImage: 'img/apartment-03.jpg',
   },
+  {
+    id: 5,
+    title: 'llllalala',
+    type: 'Apartment',
+    price: 1000,
+    city: MY_CITIES[1],
+    location: {
+      latitude: 52.3809553943508,
+      longitude: 4.939309666406198,
+      zoom: 8
+    },
+    isFavorite: false,
+    isPremium: false,
+    rating: 3.8,
+    previewImage: 'img/apartment-03.jpg',
+  },
+  {
+    id: 6,
+    title: 'ggggggg',
+    type: 'Apartment',
+    price: 500,
+    city: MY_CITIES[1],
+    location: {
+      latitude: 52.3809553943508,
+      longitude: 4.939309666406198,
+      zoom: 8
+    },
+    isFavorite: false,
+    isPremium: false,
+    rating: 3.8,
+    previewImage: 'img/apartment-03.jpg',
+  },
 ];
 
 export {offers};

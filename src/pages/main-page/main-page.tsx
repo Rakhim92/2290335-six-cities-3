@@ -3,19 +3,26 @@ import {TOfferProps, TOffer} from '../../types';
 import CitiesList from './components/cities-list';
 import PlaceCardsList from '../../components/place-card/place-cards-list';
 import Map from '../../components/map/map';
+import {useState, useEffect} from 'react';
+import {changeCurrentCity, changeOffers} from '../../store/action';
 import {useAppSelector} from '../../hooks';
-import {useState} from 'react';
 import {useAppDispatch} from '../../hooks';
-import {changeCurrentCity} from '../../store/action';
 
-function MainPage ({offers}: TOfferProps): JSX.Element {
-  const dispatch = useAppDispatch();
-  const currentCity = useAppSelector((state) => state.currentCity);
-  // const cityOffers = useAppSelector((state) => state.cityOffers);
+function MainPage (): JSX.Element {
   const [activeOffer, setActiveOffer] = useState<TOffer>();
   const handleHover = (offer?: TOffer) => {
     setActiveOffer(offer);
   };
+
+  // const dispatch = useAppDispatch();
+  const currentCity = useAppSelector((state) => state.currentCity);
+  const offers = useAppSelector((state) => state.cityOffers);
+  useEffect(() => {
+
+
+    console.log(currentCity.name);
+    console.log(offers);
+  }, [currentCity, offers]);
 
 
   return (

@@ -10,19 +10,18 @@ import Layout from '../layout/layout.tsx';
 import {TOffer, TComment, TOfferExtended} from '../../types.ts';
 
 type TOffersCommentsProps = {
-  offers: TOffer[];
   extendedOffers: TOfferExtended[];
   otherOffers: TOffer[];
   comments: TComment[];
 }
 
-function App({offers, extendedOffers, otherOffers, comments}: TOffersCommentsProps): JSX.Element {
+function App({extendedOffers, otherOffers, comments}: TOffersCommentsProps): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
         <Route path={AppRoute.Root} element={<Layout/>}>
           <Route index
-            element={<MainPage offers = {offers}/>}
+            element={<MainPage/>}
           />
           <Route path={AppRoute.Login}
             element={<LoginPage/>}
@@ -38,7 +37,7 @@ function App({offers, extendedOffers, otherOffers, comments}: TOffersCommentsPro
               }
             />
           </Route>
-          <Route path={AppRoute.Favorites}
+          {/* <Route path={AppRoute.Favorites}
             element={
               <PrivateRoute
                 authorizationStatus = {getAuthorizationStatus()}
@@ -46,7 +45,7 @@ function App({offers, extendedOffers, otherOffers, comments}: TOffersCommentsPro
                 <FavoritePage offers = {offers}/>
               </PrivateRoute>
             }
-          />
+          /> */}
           <Route path='*'
             element={<NotFoundedPage/>}
           />

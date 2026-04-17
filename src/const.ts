@@ -18,7 +18,7 @@ enum classNamesForMap {
   Offer = 'offer__map'
 }
 
-const CITIES_MOCK = [
+const MY_CITIES = [
   {
     name: 'Paris',
     location: {
@@ -69,4 +69,4 @@ const CITIES_MOCK = [
   },
 ];
 
-export {CITIES_MOCK, AppRoute, AuthorizationStatus, getAuthorizationStatus, classNamesForMap};
+export {MY_CITIES, AppRoute, AuthorizationStatus, getAuthorizationStatus, classNamesForMap};

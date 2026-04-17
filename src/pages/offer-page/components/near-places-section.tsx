@@ -11,9 +11,9 @@ const NearPlacesSection = ({otherOffers, handleHover}: TComplexProps):JSX.Elemen
     <section className="near-places places">
       <h2 className="near-places__title">Other places in the neighbourhood</h2>
       <PlaceCardsList
+        handleHover = {handleHover}
         type = {'offer'}
         offers = {otherOffers}
-        handleHover = {handleHover}
       />
     </section>
   </div>

@@ -2,11 +2,12 @@ import {classNamesForMap} from '../../const';
 import {TOffer} from '../../types';
 import {useState} from 'react';
 import {useAppSelector} from '../../hooks';
+import { SortOption } from './components/const';
 import CitiesList from './components/cities-list';
 import PlaceCardsList from '../../components/place-card/place-cards-list';
 import Map from '../../components/map/map';
 import SortBar from './components/sort-bar';
-import { SortOption } from './components/const';
+
 import classNames from 'classnames';
 
 function MainPage (): JSX.Element {

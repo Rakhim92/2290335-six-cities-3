@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import {Provider} from 'react-redux';
 import App from './components/app/app';
 import {store} from './store';
+import {fetchQuestionAction} from './store/api-actions';
 // import {extendedOffers} from './mocks/extended-offers.ts';
 // import {otherOffers} from './mocks/other-offers.ts';
 // import {comments} from './mocks/comments.ts';
@@ -10,6 +11,8 @@ import {store} from './store';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
+store.dispatch(fetchQuestionAction());
 
 root.render(
   <React.StrictMode>

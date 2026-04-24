@@ -1,33 +1,38 @@
-import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import {AppRoute, getAuthorizationStatus} from '../../const.ts';
+import {Route, Routes} from 'react-router-dom';
+import PrivateRoute from '../private-route/private-route.tsx';
+import {AppRoute, AuthorizationStatus} from '../../const.ts';
+import Layout from '../layout/layout.tsx';
 import MainPage from '../../pages/main-page/main-page';
 import LoginPage from '../../pages/login-page/login-page.tsx';
 import FavoritePage from '../../pages/favorite-page/favorite-page.tsx';
 import OfferPage from '../../pages/offer-page/offer-page.tsx';
-import PrivateRoute from '../private-route/private-route.tsx';
+import HistoryRouter from '../history-route/history-route';
+import browserHistory from '../../browser-history';
+import LoadingScreen from '../loading-screen/loading-screen.tsx';
 import NotFoundedPage from '../../pages/not-founded-page/not-founded-page.tsx';
-import Layout from '../layout/layout.tsx';
-import {TOffer, TComment, TOfferExtended} from '../../types.ts';
-import { useAppDispatch } from '../../hooks/index.ts';
-import { useEffect } from 'react';
-import { changeOffers } from '../../store/action.ts';
-import { offers } from '../../mocks/offers.ts';
+// import { useEffect } from 'react';
+// import { changeOffers } from '../../store/action.ts';
+import { useAppSelector } from '../../hooks/index.ts';
 
-type TOffersCommentsProps = {
-  extendedOffers: TOfferExtended[];
-  otherOffers: TOffer[];
-  comments: TComment[];
-}
+const App = (): JSX.Element => {
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const isQuestionsDataLoading = useAppSelector((state) => state.isQuestionsDataLoading);
 
-function App({extendedOffers, otherOffers, comments}: TOffersCommentsProps): JSX.Element {
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(changeOffers(offers));
-  }, [dispatch]);
+  if (authorizationStatus === AuthorizationStatus.Unknown || isQuestionsDataLoading) {
+    return (
+      <LoadingScreen />
+    );
+  }
+  // const dispatch = useAppDispatch();
+  // useEffect(() => {
+  //   dispatch(changeOffers(offers));
+  // }, [dispatch]);
   return (
-    <BrowserRouter>
+    <HistoryRouter history={browserHistory}>
       <Routes>
-        <Route path={AppRoute.Root} element={<Layout/>}>
+        <Route path={AppRoute.Root}
+          element={<Layout/>}
+        >
           <Route index
             element={<MainPage/>}
           />
@@ -36,19 +41,13 @@ function App({extendedOffers, otherOffers, comments}: TOffersCommentsProps): JSX
           />
           <Route path={AppRoute.Offer}>
             <Route path=":id"
-              element={
-                <OfferPage
-                  extendedOffers = {extendedOffers}
-                  otherOffers = {otherOffers}
-                  comments = {comments}
-                />
-              }
+              element={<OfferPage/>}
             />
           </Route>
           <Route path={AppRoute.Favorites}
             element={
               <PrivateRoute
-                authorizationStatus = {getAuthorizationStatus()}
+                authorizationStatus = {authorizationStatus}
               >
                 <FavoritePage/>
               </PrivateRoute>
@@ -59,9 +58,9 @@ function App({extendedOffers, otherOffers, comments}: TOffersCommentsProps): JSX
           />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </HistoryRouter>
   );
-}
+};
 
 export default App;
 

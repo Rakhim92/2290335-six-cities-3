@@ -2,10 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {Provider} from 'react-redux';
 import App from './components/app/app';
-import {extendedOffers} from './mocks/extended-offers.ts';
-import {otherOffers} from './mocks/other-offers.ts';
-import {comments} from './mocks/comments.ts';
 import {store} from './store';
+import {fetchQuestionAction} from './store/api-actions';
+import ErrorMessage from './components/error-message/error-message';
+import {checkAuthAction} from './store/api-actions';
+// import {extendedOffers} from './mocks/extended-offers.ts';
+// import {otherOffers} from './mocks/other-offers.ts';
+// import {comments} from './mocks/comments.ts';
+
+store.dispatch(fetchQuestionAction());
+store.dispatch(checkAuthAction());
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -14,11 +20,8 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Provider store = {store}>
-      <App
-        extendedOffers = {extendedOffers}
-        otherOffers = {otherOffers}
-        comments = {comments}
-      />
+      <ErrorMessage />
+      <App/>
     </Provider>
   </React.StrictMode>
 );

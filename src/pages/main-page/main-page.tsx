@@ -7,7 +7,6 @@ import CitiesList from './components/cities-list';
 import PlaceCardsList from '../../components/place-card/place-cards-list';
 import Map from '../../components/map/map';
 import SortBar from './components/sort-bar';
-
 import classNames from 'classnames';
 import EmptySection from './components/empty-section';
 
@@ -16,6 +15,7 @@ function MainPage (): JSX.Element {
   const handleHover = (offer?: TOffer) => {
     setActiveOffer(offer);
   };
+
   const currentCity = useAppSelector((state) => state.currentCity);
   const offers: TOffer[] = useAppSelector((state) => state.offers);
   const filteredOffers = offers.filter((offer) => offer.city.name === currentCity.name);

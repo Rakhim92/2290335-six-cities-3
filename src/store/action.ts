@@ -9,3 +9,4 @@ export const requireAuthorization = createAction<AuthorizationStatus>('user/requ
 export const setError = createAction<string | null>('game/setError');
 export const setOffersLoadingStatus = createAction<boolean>('data/setOffersLoadingStatus');
 export const redirectToRoute = createAction<AppRoute>('game/redirectToRoute');
+export const changeCurrentOffer = createAction<number>('city/changeCurrentOffer');

@@ -10,14 +10,10 @@ import HistoryRouter from '../history-route/history-route';
 import browserHistory from '../../browser-history';
 import LoadingScreen from '../loading-screen/loading-screen.tsx';
 import NotFoundedPage from '../../pages/not-founded-page/not-founded-page.tsx';
-// import { useEffect } from 'react';
-// import { changeOffers } from '../../store/action.ts';
 import { useAppSelector } from '../../hooks/index.ts';
 import { store } from '../../store/index.ts';
 import { fetchQuestionAction } from '../../store/api-actions.ts';
 import { useEffect } from 'react';
-
-// type TAuthorizationStatus = AuthorizationStatus.Auth | AuthorizationStatus.NoAuth | AuthorizationStatus.Unknown;
 
 const App = (): JSX.Element => {
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);

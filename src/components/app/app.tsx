@@ -17,6 +17,8 @@ import { store } from '../../store/index.ts';
 import { fetchQuestionAction } from '../../store/api-actions.ts';
 import { useEffect } from 'react';
 
+// type TAuthorizationStatus = AuthorizationStatus.Auth | AuthorizationStatus.NoAuth | AuthorizationStatus.Unknown;
+
 const App = (): JSX.Element => {
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
   const isQuestionsDataLoading = useAppSelector((state) => state.isQuestionsDataLoading);
@@ -38,7 +40,11 @@ const App = (): JSX.Element => {
           element={<Layout/>}
         >
           <Route index
-            element={<MainPage/>}
+            element={
+              <PrivateRoute authorizationStatus = {authorizationStatus}>
+                <MainPage/>
+              </PrivateRoute>
+            }
           />
           <Route path={AppRoute.Login}
             element={<LoginPage/>}
@@ -50,9 +56,7 @@ const App = (): JSX.Element => {
           </Route>
           <Route path={AppRoute.Favorites}
             element={
-              <PrivateRoute
-                authorizationStatus = {authorizationStatus}
-              >
+              <PrivateRoute authorizationStatus = {authorizationStatus}>
                 <FavoritePage/>
               </PrivateRoute>
             }

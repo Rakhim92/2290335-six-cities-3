@@ -1,6 +1,6 @@
 import {AxiosInstance} from 'axios';
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {AppDispatch, State} from '../types/state.ts';
+import {AppDispatch, State} from '../types.ts';
 import {TOffer, UserData, AuthData} from '../types.ts';
 import {loadOffers, requireAuthorization, setError, setOffersLoadingStatus, redirectToRoute} from './action';
 import {saveToken, dropToken} from '../services/token';

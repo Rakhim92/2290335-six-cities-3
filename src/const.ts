@@ -1,3 +1,5 @@
+import { TOffer } from './types';
+
 enum AppRoute {
   Root = '/',
   Login = '/login',
@@ -73,4 +75,6 @@ const MY_CITIES = [
   },
 ];
 
-export {MY_CITIES, AppRoute, AuthorizationStatus, classNamesForMap, APIRoute};
+const getRandomThree = (arr: TOffer[]) => [...arr].sort(() => 0.5 - Math.random()).slice(0, 3);
+
+export {MY_CITIES, AppRoute, AuthorizationStatus, classNamesForMap, APIRoute, getRandomThree};

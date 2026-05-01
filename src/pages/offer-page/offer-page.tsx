@@ -1,27 +1,26 @@
 import {useCallback, useEffect, useState} from 'react';
+import {useParams} from 'react-router-dom';
 import {useAppSelector} from '../../hooks';
 import {TOffer, TOfferExtended, TComment} from '../../types';
 import {OfferInside} from './components/offer-inside';
 import {OfferHost} from './components/offer-host';
+import {classNamesForMap, getRandomThree} from '../../const';
+import {api} from '../../store';
 import NotFoundedPage from '../not-founded-page/not-founded-page';
 import ReviewsSection from './components/reviews-section/reviews-section';
 import NearPlacesSection from './components/near-places-section';
 import Map from '../../components/map/map';
-import {classNamesForMap} from '../../const';
-import {api} from '../../store';
 import LoadingScreen from '../../components/loading-screen/loading-screen';
-import { useParams } from 'react-router-dom';
 
+const NUMBER_OF_SHOWN_PICTURES = 3;
 
 function OfferPage(): JSX.Element {
-  const { id } = useParams<{ id: string }>();
   const currentCity = useAppSelector((state) => state.currentCity);
+  const {id} = useParams<{ id: string }>();
   const urlId = id;
-  // Загруженный выбранный оффер, комментарии, все остальные офферы
   const [offer, setOffer] = useState<TOfferExtended | null>(null);
   const [comments, setComments] = useState<TComment[] | null>(null);
   const [nearbyOffers, setNearbyOffers] = useState<TOffer[] | null>(null);
-  // Процесс загрузки
   const [isLoading, setIsLoading] = useState(true);
   const [activeOffer, setActiveOffer] = useState<TOffer | undefined>();
 
@@ -42,12 +41,12 @@ function OfferPage(): JSX.Element {
     (async () => {
       try {
         setIsLoading(true);
-        const { data } = await api.get<TOfferExtended>(`offers/${urlId}`);
-        const { data: nearbyData } = await api.get<TOffer[]>(`offers/${urlId}/nearby`);
+        const { data: currentOfferData } = await api.get<TOfferExtended>(`offers/${urlId}`);
+        const { data: nearbyOffersData } = await api.get<TOffer[]>(`offers/${urlId}/nearby`);
         await fetchComments();
         if (isMounted) {
-          setOffer(data);
-          setNearbyOffers(nearbyData);
+          setOffer(currentOfferData);
+          setNearbyOffers(nearbyOffersData);
         }
       } finally {
         if (isMounted) {
@@ -74,6 +73,8 @@ function OfferPage(): JSX.Element {
   }
 
   const { title, type, price, isFavorite, isPremium, rating, description, bedrooms, host, goods, images, maxAdults} = offer;
+  const limitedOffers = getRandomThree(nearbyOffers);
+  // console.table(limitedOffers);
 
   return (
     <main className="page__main page__main--offer">
@@ -81,7 +82,9 @@ function OfferPage(): JSX.Element {
         <div className="offer__gallery-container container">
           <div className="offer__gallery">
             {images.map((item) => (
-              <div className="offer__image-wrapper" key={item}>
+              <div className="offer__image-wrapper"
+                key={item}
+              >
                 <img
                   className="offer__image"
                   src={item}
@@ -137,17 +140,19 @@ function OfferPage(): JSX.Element {
             />
           </div>
         </div>
-        <Map
-          offers = {nearbyOffers}
+        {/* <Map
+          offers = {limitedOffers}
           city = {currentCity}
-          selectedPoint = {activeOffer}
+          selectedPoint = {offer}
           classNamesForMap = {classNamesForMap.Offer}
-        />
+        /> */}
       </section>
+
+      {nearbyOffers &&
       <NearPlacesSection
         handleHover = {handleHover}
-        otherOffers = {nearbyOffers}
-      />
+        otherOffers = {limitedOffers}
+      />}
     </main>
   );
 }

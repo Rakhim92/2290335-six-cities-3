@@ -1,24 +1,13 @@
 import { ReactEventHandler, useState, Fragment, FormEvent} from 'react';
 import { api } from '../../../../store';
+import {TComment} from '../../../../types';
+
+type TChangeHandler = ReactEventHandler<HTMLInputElement | HTMLTextAreaElement>
 
 type urlIdProps = {
   urlId: string | undefined;
   fetchComments: () => Promise<void>;
 }
-
-type TChangeHandler = ReactEventHandler<HTMLInputElement | HTMLTextAreaElement>
-
-type TComment = {
-  id: string;
-  date: string;
-  user: {
-    name: string;
-    avatarUrl: string;
-    isPro: boolean;
-  };
-  comment: string;
-  rating: number;
-};
 
 const ReviewsForm = ({urlId, fetchComments}: urlIdProps) => {
   const [review, setReview] = useState({rating: 0, review: ''});

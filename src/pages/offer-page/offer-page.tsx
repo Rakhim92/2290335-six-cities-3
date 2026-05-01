@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {useAppSelector} from '../../hooks';
 import {TOffer, TOfferExtended, TComment} from '../../types';
 import {OfferInside} from './components/offer-inside';
@@ -24,34 +24,35 @@ function OfferPage(): JSX.Element {
   const [isLoading, setIsLoading] = useState(true);
   const [activeOffer, setActiveOffer] = useState<TOffer | undefined>();
 
+  const fetchComments = useCallback(async () => {
+    const { data: commentsData } = await api.get<TComment[]>(`comments/${urlId}`);
+    setComments(commentsData);
+  },[urlId]);
+
   useEffect(() => {
     let isMounted = true;
 
-    const fetchOffer = async () => {
+    (async () => {
       try {
         setIsLoading(true);
         const { data } = await api.get<TOfferExtended>(`offers/${urlId}`);
-        const { data: commentsData } = await api.get<TComment[]>(`comments/${urlId}`);
         const { data: nearbyData } = await api.get<TOffer[]>(`offers/${urlId}/nearby`);
+        fetchComments();
         if (isMounted) {
           setOffer(data);
-          setComments(commentsData);
           setNearbyOffers(nearbyData);
         }
-      } catch {
-        // Ошибка
       } finally {
         if (isMounted) {
           setIsLoading(false);
         }
       }
-    };
+    })();
 
-    fetchOffer();
     return () => {
       isMounted = false;
     };
-  }, [urlId]);
+  }, [urlId, fetchComments]);
 
   const handleHover = (selectedOffer?: TOffer) => {
     setActiveOffer(selectedOffer);
@@ -123,6 +124,7 @@ function OfferPage(): JSX.Element {
               description = {description}
             />
             <ReviewsSection
+              fetchComments = {fetchComments}
               comments = {comments}
               urlId = {urlId}
             />

@@ -7,9 +7,10 @@ import ReviewsList from './reviews-list';
 type TCommentsProps = {
   comments: TComment[] | null;
   urlId: number | null;
+  fetchComments: () => Promise<void>;
 }
 
-const ReviewsSection = ({comments, urlId}: TCommentsProps):JSX.Element => {
+const ReviewsSection = ({comments, urlId, fetchComments}: TCommentsProps):JSX.Element => {
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
   return (
     <section className="offer__reviews reviews">
@@ -20,6 +21,7 @@ const ReviewsSection = ({comments, urlId}: TCommentsProps):JSX.Element => {
       {authorizationStatus === AuthorizationStatus.Auth ? (
         <ReviewsForm
           urlId = {urlId}
+          fetchComments = {fetchComments}
         />
       ) : null}
     </section>

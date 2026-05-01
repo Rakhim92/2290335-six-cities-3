@@ -3,6 +3,7 @@ import { api } from '../../../../store';
 
 type urlIdProps = {
   urlId: number | null;
+  fetchComments: () => Promise<void>;
 }
 
 type TChangeHandler = ReactEventHandler<HTMLInputElement | HTMLTextAreaElement>
@@ -19,7 +20,7 @@ type TComment = {
   rating: number;
 };
 
-const ReviewsForm = ({urlId}: urlIdProps) => {
+const ReviewsForm = ({urlId, fetchComments}: urlIdProps) => {
   const [review, setReview] = useState({rating: 0, review: ''});
   const [isSending, setIsSending] = useState(false);
 
@@ -45,9 +46,7 @@ const ReviewsForm = ({urlId}: urlIdProps) => {
       });
 
       setReview({ rating: 0, review: '' });
-    } catch (error) {
-      console.error('Ошибка при отправке:', error);
-
+      void fetchComments();
     } finally {
       setIsSending(false);
     }
@@ -66,7 +65,9 @@ const ReviewsForm = ({urlId}: urlIdProps) => {
       className="reviews__form form"
       action="#"
       method="post"
-      onSubmit={handleSubmit}
+      onSubmit={(evt) => {
+        void handleSubmit(evt);
+      }}
     >
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
       <div className="reviews__rating-form form__rating">

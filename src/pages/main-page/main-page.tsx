@@ -2,7 +2,7 @@ import {classNamesForMap} from '../../const';
 import {TOffer} from '../../types';
 import {useState} from 'react';
 import {useAppSelector} from '../../hooks';
-import { SortOption } from './components/const';
+import {SortOption} from './components/const';
 import CitiesList from './components/cities-list';
 import PlaceCardsList from '../../components/place-card/place-cards-list';
 import Map from '../../components/map/map';

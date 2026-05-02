@@ -1,8 +1,8 @@
 import {Link} from 'react-router-dom';
 import {AppRoute} from '../../const';
 import {TOffer} from '../../types';
-import { store } from '../../store';
-import { changeCurrentOffer } from '../../store/action';
+import {store} from '../../store';
+import {changeCurrentOffer, changeFavorite} from '../../store/action';
 
 type TPlaceCardProps = {
   typeClassName: 'root' | 'offer' | 'favorites';
@@ -65,7 +65,13 @@ function PlaceCard({typeClassName, offer, handleHover}: TPlaceCardProps) {
             <b className="place-card__price-value">&euro;{price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          <button className={`place-card__bookmark-button button ${isFavorite ? 'place-card__bookmark-button--active' : ''}`} type="button">
+          <button className={`place-card__bookmark-button button
+            ${isFavorite ? 'place-card__bookmark-button--active' : ''}`}
+          type="button"
+          onClick={() => {
+            store.dispatch(changeFavorite(true));
+          }}
+          >
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
             </svg>

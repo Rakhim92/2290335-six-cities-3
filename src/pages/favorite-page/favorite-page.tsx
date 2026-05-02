@@ -1,13 +1,21 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import PlaceCardsList from '../../components/place-card/place-cards-list';
 import {TOffer} from '../../types';
-import {MY_CITIES} from '../../const';
 import {useAppSelector} from '../../hooks';
-
-const MOCK_AMSTERDAM = [MY_CITIES[3]];
+import { api } from '../../store';
 
 const FavoritePage = (): JSX.Element => {
   const [, setActiveOffer] = useState<TOffer>();
+  const [favoriteOffers, setFavoriteOffers] = useState<TOffer[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const {data} = await api.get<TOffer>('favorite');
+      setFavoriteOffers(data);
+    })();
+  }, []);
+  console.log(favoriteOffers);
+
   const handleHover = (offer?: TOffer) => {
     setActiveOffer(offer);
   };
@@ -19,7 +27,7 @@ const FavoritePage = (): JSX.Element => {
         <section className="favorites">
           <h1 className="favorites__title">Saved listing</h1>
           <ul className="favorites__list">
-            {MOCK_AMSTERDAM.map((favoriteCity) => (
+            {favoriteOffers && favoriteOffers.map((favoriteCity) => (
               <li className="favorites__locations-items" key={favoriteCity.name}>
                 <div className="favorites__locations locations locations--current">
                   <div className="locations__item">

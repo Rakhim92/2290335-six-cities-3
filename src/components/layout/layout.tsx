@@ -1,8 +1,8 @@
 import {Outlet, useLocation, Link} from 'react-router-dom';
 import {AppRoute, AuthorizationStatus} from '../../const';
 import {useAppSelector} from '../../hooks';
-import { logoutAction } from '../../store/api-actions';
-import { store } from '../../store';
+import {logoutAction} from '../../store/api-actions';
+import {store} from '../../store';
 
 const getLayoutState = (pathname: AppRoute) => {
   let rootClassName = '';
@@ -27,7 +27,7 @@ export default function Layout() {
   const {pathname} = useLocation();
   const {rootClassName, linkClassName, shouldRenderUser, shouldRenderFooter} = getLayoutState(pathname as AppRoute);
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-
+  const userEmail = useAppSelector((state) => state.authInfo);
   return (
     <div className= {`page ${rootClassName}`}>
       <header className="header">
@@ -56,7 +56,7 @@ export default function Layout() {
                         </div>
                         {authorizationStatus === AuthorizationStatus.Auth ? (
                           <>
-                            <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
+                            <span className="header__user-name user__name">{userEmail}</span>
                             <span className="header__favorite-count">3</span>
                           </>
                         ) : <span className="header__login">Sign in</span>}

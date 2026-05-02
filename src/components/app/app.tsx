@@ -12,7 +12,7 @@ import LoadingScreen from '../loading-screen/loading-screen.tsx';
 import NotFoundedPage from '../../pages/not-founded-page/not-founded-page.tsx';
 import { useAppSelector } from '../../hooks/index.ts';
 import { store } from '../../store/index.ts';
-import { fetchQuestionAction } from '../../store/api-actions.ts';
+import { fetchOffersAction } from '../../store/api-actions.ts';
 import { useEffect } from 'react';
 
 const App = (): JSX.Element => {
@@ -20,7 +20,7 @@ const App = (): JSX.Element => {
   const isOffersDataLoading = useAppSelector((state) => state.isOffersDataLoading);
 
   useEffect(() => {
-    store.dispatch(fetchQuestionAction());
+    store.dispatch(fetchOffersAction());
   }, []);
 
   if (authorizationStatus === AuthorizationStatus.Unknown || isOffersDataLoading) {

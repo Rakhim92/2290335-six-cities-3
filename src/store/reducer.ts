@@ -1,5 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {changeCurrentCity, changeOffers, loadOffers, requireAuthorization, setOffersLoadingStatus, changeCurrentOffer} from './action';
+import {changeCurrentCity, changeOffers, loadOffers, requireAuthorization, setOffersLoadingStatus, changeCurrentOffer, changeFavorite, saveAuthInfo} from './action';
 import {City, TOffer} from '../types';
 import {MY_CITIES, AuthorizationStatus} from '../const';
 
@@ -9,6 +9,8 @@ type TInitialState = {
   authorizationStatus: AuthorizationStatus;
   isOffersDataLoading: boolean;
   currentOffer: number | null;
+  favorites: TOffer[] | [];
+  authInfo: string | null;
 }
 
 const initialState: TInitialState = {
@@ -16,7 +18,9 @@ const initialState: TInitialState = {
   offers: [],
   authorizationStatus: AuthorizationStatus.Unknown,
   isOffersDataLoading: false,
-  currentOffer: null
+  currentOffer: null,
+  favorites: [],
+  authInfo: null
 };
 
 const reducer = createReducer(initialState, (builder) => {
@@ -38,6 +42,12 @@ const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(changeCurrentOffer, (state, action) => {
       state.currentOffer = action.payload;
+    })
+    .addCase(saveAuthInfo, (state, action) => {
+      state.authInfo = action.payload;
+    })
+    .addCase(changeFavorite, (state, action) => {
+      state.favorites = action.payload;
     });
 });
 

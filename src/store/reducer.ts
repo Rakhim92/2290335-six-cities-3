@@ -3,6 +3,11 @@ import {changeCurrentCity, changeOffers, loadOffers, requireAuthorization, setOf
 import {City, TOffer} from '../types';
 import {MY_CITIES, AuthorizationStatus} from '../const';
 
+const getSavedAuthInfo = (): string | null => {
+  const data = localStorage.getItem('user-auth-data');
+  return data ? JSON.parse(data) : null;
+};
+
 type TInitialState = {
   currentCity: City;
   offers: TOffer[];
@@ -20,7 +25,7 @@ const initialState: TInitialState = {
   isOffersDataLoading: false,
   currentOffer: null,
   favorites: [],
-  authInfo: null
+  authInfo: getSavedAuthInfo()
 };
 
 const reducer = createReducer(initialState, (builder) => {
@@ -45,10 +50,10 @@ const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(saveAuthInfo, (state, action) => {
       state.authInfo = action.payload;
-    })
-    .addCase(changeFavorite, (state, action) => {
-      state.favorites = action.payload;
     });
+  // .addCase(changeFavorite, (state, action) => {
+  //   state.favorites = action.payload;
+  // });
 });
 
 export {reducer};

@@ -1,11 +1,11 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {changeCurrentCity, changeOffers, loadOffers, requireAuthorization, setOffersLoadingStatus, changeCurrentOffer, changeFavorite, saveAuthInfo} from './action';
+import {changeCurrentCity, changeOffers, loadOffers, requireAuthorization, setOffersLoadingStatus, changeCurrentOffer, saveAuthInfo, loadFavorite, changeFavorite} from './action';
 import {City, TOffer} from '../types';
 import {MY_CITIES, AuthorizationStatus} from '../const';
 
 const getSavedAuthInfo = (): string | null => {
   const data = localStorage.getItem('user-auth-data');
-  return data ? JSON.parse(data) : null;
+  return data ? (JSON.parse(data) as string) : null;
 };
 
 type TInitialState = {
@@ -13,8 +13,8 @@ type TInitialState = {
   offers: TOffer[];
   authorizationStatus: AuthorizationStatus;
   isOffersDataLoading: boolean;
-  currentOffer: number | null;
-  favorites: TOffer[] | [];
+  currentOffer: string | null;
+  favorites: TOffer[];
   authInfo: string | null;
 }
 
@@ -25,7 +25,7 @@ const initialState: TInitialState = {
   isOffersDataLoading: false,
   currentOffer: null,
   favorites: [],
-  authInfo: getSavedAuthInfo()
+  authInfo: getSavedAuthInfo(),
 };
 
 const reducer = createReducer(initialState, (builder) => {
@@ -50,10 +50,25 @@ const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(saveAuthInfo, (state, action) => {
       state.authInfo = action.payload;
+    })
+    .addCase(loadFavorite, (state, action) => {
+      state.favorites = action.payload;
+    })
+    .addCase(changeFavorite, (state, action) => {
+      const offerId = action.payload;
+      const offer = state.offers.find((item) => item.id === offerId);
+      if (offer) {
+        offer.isFavorite = !offer.isFavorite;
+        if (offer.isFavorite) {
+          const alreadyInFavorites = state.favorites.some((item) => item.id === offer.id);
+          if (!alreadyInFavorites) {
+            state.favorites.push(offer);
+          }
+        } else {
+          state.favorites = state.favorites.filter((item) => item.id !== offer.id);
+        }
+      }
     });
-  // .addCase(changeFavorite, (state, action) => {
-  //   state.favorites = action.payload;
-  // });
 });
 
 export {reducer};

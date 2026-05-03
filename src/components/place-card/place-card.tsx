@@ -23,7 +23,6 @@ const getClassName = (typeClassName: string) => {
   }
 };
 
-
 function PlaceCard({typeClassName, offer, handleHover}: TPlaceCardProps) {
   const {id, title, previewImage, price, isPremium, isFavorite, type, rating} = offer;
   const handleMouseOn = () => {
@@ -69,7 +68,7 @@ function PlaceCard({typeClassName, offer, handleHover}: TPlaceCardProps) {
             ${isFavorite ? 'place-card__bookmark-button--active' : ''}`}
           type="button"
           onClick={() => {
-            store.dispatch(changeFavorite(true));
+            store.dispatch(changeFavorite(id));
           }}
           >
             <svg className="place-card__bookmark-icon" width="18" height="19">

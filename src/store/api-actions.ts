@@ -2,7 +2,7 @@ import {AxiosInstance} from 'axios';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {AppDispatch, State} from '../types.ts';
 import {TOffer, UserData, AuthData} from '../types.ts';
-import {loadOffers, requireAuthorization, setOffersLoadingStatus, redirectToRoute, saveAuthInfo} from './action';
+import {loadOffers, requireAuthorization, setOffersLoadingStatus, redirectToRoute, saveAuthInfo, loadFavorite} from './action';
 import {saveToken, dropToken} from '../services/token';
 import {APIRoute, AuthorizationStatus, AppRoute} from '../const';
 
@@ -17,6 +17,20 @@ export const fetchOffersAction = createAsyncThunk<void, undefined, {
     const {data} = await api.get<TOffer[]>(APIRoute.Offers);
     dispatch(setOffersLoadingStatus(false));
     dispatch(loadOffers(data));
+  },
+);
+
+export const fetchFavoritesAction = createAsyncThunk<void, undefined, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'data/fetchFavorites',
+  async (_arg, {dispatch, extra: api}) => {
+    dispatch(setOffersLoadingStatus(true));
+    const {data} = await api.get<TOffer[]>(APIRoute.Favorite);
+    dispatch(setOffersLoadingStatus(false));
+    dispatch(loadFavorite(data));
   },
 );
 

@@ -105,14 +105,19 @@ function OfferPage(): JSX.Element {
             )}
             <div className="offer__name-wrapper">
               <h1 className="offer__name">{title}</h1>
-              {isFavorite && (
-                <button className="offer__bookmark-button button" type="button">
-                  <svg className="offer__bookmark-icon" width="31" height="33">
-                    <use xlinkHref="#icon-bookmark"/>
-                  </svg>
-                  <span className="visually-hidden">To bookmarks</span>
-                </button>
-              )}
+              <button
+                className={`offer__bookmark-button button
+                  ${isFavorite ? 'offer__bookmark-button--active' : ''}`}
+                type="button"
+              >
+                <svg className="offer__bookmark-icon"
+                  width="31"
+                  height="33"
+                >
+                  <use xlinkHref="#icon-bookmark"/>
+                </svg>
+                <span className="visually-hidden">To bookmarks</span>
+              </button>
             </div>
             <div className="offer__rating rating">
               <div className="offer__stars rating__stars">

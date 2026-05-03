@@ -12,16 +12,22 @@ import LoadingScreen from '../loading-screen/loading-screen.tsx';
 import NotFoundedPage from '../../pages/not-founded-page/not-founded-page.tsx';
 import { useAppSelector } from '../../hooks/index.ts';
 import { store } from '../../store/index.ts';
-import { fetchOffersAction } from '../../store/api-actions.ts';
+import { fetchOffersAction, fetchFavoritesAction } from '../../store/api-actions.ts';
 import { useEffect } from 'react';
 
 const App = (): JSX.Element => {
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
   const isOffersDataLoading = useAppSelector((state) => state.isOffersDataLoading);
+  // const favorites = useAppSelector((state) => state.favorites);
 
   useEffect(() => {
     store.dispatch(fetchOffersAction());
+    store.dispatch(fetchFavoritesAction());
   }, []);
+
+  // useEffect(() => {
+  //   store.dispatch(fetchFavoritesAction());
+  // }, [favorites]);
 
   if (authorizationStatus === AuthorizationStatus.Unknown || isOffersDataLoading) {
     return (
@@ -45,6 +51,13 @@ const App = (): JSX.Element => {
           <Route path={AppRoute.Login}
             element={<LoginPage/>}
           />
+          {/* <Route path={AppRoute.Login}
+            element={
+              <PrivateRoute authorizationStatus = {authorizationStatus}>
+                <LoginPage/>
+              </PrivateRoute>
+            }
+          /> */}
           <Route path={AppRoute.Offer}>
             <Route path=":id"
               element={<OfferPage/>}

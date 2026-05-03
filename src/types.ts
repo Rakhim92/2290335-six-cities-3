@@ -6,7 +6,7 @@ export type AppDispatch = typeof store.dispatch;
 
 
 export type TOffer = {
-  id: number;
+  id: string;
   title: string;
   type: string;
   price: number;
@@ -30,7 +30,7 @@ export type TOffer = {
 }
 
 export type TOfferExtended = {
-  id: number;
+  id: string;
   title: string;
   type: string;
   price: number;

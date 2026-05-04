@@ -1,8 +1,8 @@
 import {Link} from 'react-router-dom';
 import {AppRoute} from '../../const';
 import {TOffer} from '../../types';
-import {store} from '../../store';
-import {changeCurrentOffer, changeFavorite} from '../../store/action';
+import {api, store} from '../../store';
+import {changeFavorite} from '../../store/action';
 
 type TPlaceCardProps = {
   typeClassName: 'root' | 'offer' | 'favorites';
@@ -24,6 +24,7 @@ const getClassName = (typeClassName: string) => {
 };
 
 function PlaceCard({typeClassName, offer, handleHover}: TPlaceCardProps) {
+
   const {id, title, previewImage, price, isPremium, isFavorite, type, rating} = offer;
   const handleMouseOn = () => {
     handleHover(offer);
@@ -35,14 +36,22 @@ function PlaceCard({typeClassName, offer, handleHover}: TPlaceCardProps) {
     heigthPictureCardImage = 110;
   }
 
+  const handleFavorite = async (offerId: string) => {
+    switch(isFavorite) {
+      case false:
+        await api.post<string>(`favorite/${offerId}/1`);
+        break;
+      case true:
+        await api.post<string>(`favorite/${offerId}/0`);
+        break;
+    }
+  };
+
   return (
     <article
       className={`${getClassName(typeClassName)}__card place-card`}
       key={id}
       onMouseEnter={handleMouseOn}
-      onClick={() => {
-        store.dispatch(changeCurrentOffer(id));
-      }}
     >
       {isPremium &&
         <div className="place-card__mark">
@@ -69,6 +78,7 @@ function PlaceCard({typeClassName, offer, handleHover}: TPlaceCardProps) {
           type="button"
           onClick={() => {
             store.dispatch(changeFavorite(id));
+            handleFavorite(id);
           }}
           >
             <svg className="place-card__bookmark-icon" width="18" height="19">

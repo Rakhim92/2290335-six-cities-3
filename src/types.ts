@@ -26,30 +26,10 @@ export type TOffer = {
   isFavorite: boolean;
   isPremium: boolean;
   rating: number;
-  previewImage: string;
+  previewImage?: string;
 }
 
-export type TOfferExtended = {
-  id: string;
-  title: string;
-  type: string;
-  price: number;
-  city: {
-    name: string;
-    location: {
-      latitude: number;
-      longitude: number;
-      zoom: number;
-    };
-  };
-  location: {
-    latitude: number;
-    longitude: number;
-    zoom: number;
-  };
-  isFavorite: boolean;
-  isPremium: boolean;
-  rating: number;
+export type TOfferExtended = TOffer & {
   description: string;
   bedrooms: number;
   goods: string[];
@@ -61,6 +41,8 @@ export type TOfferExtended = {
   images: [string];
   maxAdults: number;
 }
+
+export type TAnyOffer = TOffer | TOfferExtended;
 
 export type TComment = {
   id: string;
@@ -85,7 +67,7 @@ export type City = {
 
 export type MapProps = {
   city: City;
-  offers: TOffer[] | TOfferExtended[] | null;
+  offers: TOffer[] | TOfferExtended[] | TAnyOffer[] | null;
   classNamesForMap: string;
   selectedPoint?: TOffer | TOfferExtended;
   selectedOffer?: TOffer | TOfferExtended;
@@ -101,18 +83,4 @@ export type AuthData = {
   login: string;
   password: string;
 };
-
-// export type Point = {
-//   title: string;
-//   lat: number;
-//   lng: number;
-//   zoom : number;
-//   name?: string;
-//   location?: {
-//     latitude: number;
-//     longitude: number;
-//     zoom: number;
-//   };
-// };
-
 

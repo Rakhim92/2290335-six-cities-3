@@ -1,6 +1,6 @@
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useParams} from 'react-router-dom';
-import {useAppSelector} from '../../hooks';
+import {useAppDispatch, useAppSelector} from '../../hooks';
 import {TOffer, TOfferExtended, TComment} from '../../types';
 import {OfferInside} from './components/offer-inside';
 import {OfferHost} from './components/offer-host';
@@ -11,24 +11,27 @@ import ReviewsSection from './components/reviews-section/reviews-section';
 import NearPlacesSection from './components/near-places-section';
 import Map from '../../components/map/map';
 import LoadingScreen from '../../components/loading-screen/loading-screen';
+import { toggleFavoriteAction } from '../../store/api-actions';
 
 const LIMIT_PICTURES = 3;
 
 function OfferPage(): JSX.Element {
+  const dispatch = useAppDispatch();
+  const {id: urlId} = useParams<{ id: string }>();
+  // const offers = useAppSelector((state) => state.offers);
   const currentCity = useAppSelector((state) => state.currentCity);
-  const offers = useAppSelector((state) => state.offers);
-  const {id} = useParams<{ id: string }>();
-  const urlId = id;
   const [offer, setOffer] = useState<TOfferExtended | null>(null);
   const [comments, setComments] = useState<TComment[] | null>(null);
   const [nearbyOffers, setNearbyOffers] = useState<TOffer[] | null>(null);
   const [, setActiveOffer] = useState<TOffer | undefined>();
   const [isLoading, setIsLoading] = useState(true);
-  const normalOffer = offers.find((item) => item.id.toString() === urlId);
-  const offersByLimitPictures = nearbyOffers?.slice(0, LIMIT_PICTURES);
-  if (offersByLimitPictures && normalOffer) {
-    offersByLimitPictures.push(normalOffer);
-  }
+
+  const offersForMap = useMemo(() => {
+    if (!nearbyOffers || !offer) {
+      return [];
+    }
+    return [...nearbyOffers.slice(0, LIMIT_PICTURES), offer];
+  }, [nearbyOffers, offer]);
 
   const fetchComments = useCallback(async () => {
     if (!urlId) {
@@ -47,8 +50,8 @@ function OfferPage(): JSX.Element {
     (async () => {
       try {
         setIsLoading(true);
-        const { data: currentOfferData } = await api.get<TOfferExtended>(`offers/${urlId}`);
-        const { data: nearbyOffersData } = await api.get<TOffer[]>(`offers/${urlId}/nearby`);
+        const {data: currentOfferData} = await api.get<TOfferExtended>(`offers/${urlId}`);
+        const {data: nearbyOffersData} = await api.get<TOffer[]>(`offers/${urlId}/nearby`);
         await fetchComments();
         if (isMounted) {
           setOffer(currentOfferData);
@@ -71,14 +74,22 @@ function OfferPage(): JSX.Element {
   };
 
   if (isLoading) {
-    return <LoadingScreen />;
+    return <LoadingScreen/>;
   }
 
   if (!offer) {
-    return <NotFoundPage />;
+    return <NotFoundPage/>;
   }
 
-  const { title, type, price, isFavorite, isPremium, rating, description, bedrooms, host, goods, images, maxAdults} = offer;
+  const {title, type, price, isFavorite, isPremium, rating, description, bedrooms, host, goods, images, maxAdults, id} = offer;
+
+  const handleFavoriteClick = async () => {
+    const nextStatus = isFavorite ? 0 : 1;
+    const resultAction = await dispatch(toggleFavoriteAction({ id, status: nextStatus }));
+    if (toggleFavoriteAction.fulfilled.match(resultAction)) {
+      setOffer(resultAction.payload as TOfferExtended);
+    }
+  };
 
   return (
     <main className="page__main page__main--offer">
@@ -109,6 +120,9 @@ function OfferPage(): JSX.Element {
                 className={`offer__bookmark-button button
                   ${isFavorite ? 'offer__bookmark-button--active' : ''}`}
                 type="button"
+                onClick={() => {
+                  handleFavoriteClick();
+                }}
               >
                 <svg className="offer__bookmark-icon"
                   width="31"
@@ -150,19 +164,19 @@ function OfferPage(): JSX.Element {
           </div>
         </div>
 
-        {offersByLimitPictures &&
+        {offersForMap &&
           <Map
-            offers = {offersByLimitPictures}
+            offers = {offersForMap}
             city = {currentCity}
             selectedPoint = {offer}
             classNamesForMap = {classNamesForMap.Offer}
           />}
       </section>
 
-      {offersByLimitPictures &&
+      {offersForMap &&
         <NearPlacesSection
           handleHover = {handleHover}
-          otherOffers = {offersByLimitPictures.slice(0, LIMIT_PICTURES)}
+          otherOffers = {nearbyOffers?.slice(0, LIMIT_PICTURES) || []}
         />}
     </main>
   );

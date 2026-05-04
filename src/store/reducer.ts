@@ -1,6 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {changeCurrentCity, changeOffers, loadOffers, requireAuthorization, setOffersLoadingStatus, changeCurrentOffer, saveAuthInfo, loadFavorite} from './action';
-import {City, TOffer} from '../types';
+import {City, TOffer, TOfferExtended} from '../types';
 import {MY_CITIES, AuthorizationStatus} from '../const';
 import { toggleFavoriteAction } from './api-actions';
 
@@ -14,7 +14,7 @@ type TInitialState = {
   offers: TOffer[];
   authorizationStatus: AuthorizationStatus;
   isOffersDataLoading: boolean;
-  currentOffer: string | null;
+  currentOffer: TOffer | TOfferExtended |null;
   favorites: TOffer[];
   authInfo: string | null;
 }
@@ -61,10 +61,14 @@ const reducer = createReducer(initialState, (builder) => {
       const offerIndex = state.offers.findIndex((item) => item.id === updatedOffer.id);
       if (offerIndex !== -1) {
         state.offers[offerIndex] = updatedOffer;
+        state.currentOffer = updatedOffer;
       }
 
       if (updatedOffer.isFavorite) {
-        state.favorites.push(updatedOffer);
+        const hasFavorite = state.favorites.some((item) => item === updatedOffer);
+        if (!hasFavorite) {
+          state.favorites.push(updatedOffer);
+        }
       } else {
         state.favorites = state.favorites.filter((item) => item.id !== updatedOffer.id);
       }

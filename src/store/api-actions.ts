@@ -1,22 +1,47 @@
 import {AxiosInstance} from 'axios';
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {AppDispatch, State} from '../types.ts';
-import {TOffer, UserData, AuthData} from '../types.ts';
-import {loadOffers, requireAuthorization, setOffersLoadingStatus, redirectToRoute} from './action';
+import {TOffer, UserData, AuthData, AppDispatch, State} from '../types.ts';
+import {loadOffers, requireAuthorization, setOffersLoadingStatus, redirectToRoute, saveAuthInfo, loadFavorite} from './action';
 import {saveToken, dropToken} from '../services/token';
 import {APIRoute, AuthorizationStatus, AppRoute} from '../const';
 
-export const fetchQuestionAction = createAsyncThunk<void, undefined, {
+export const toggleFavoriteAction = createAsyncThunk<
+  TOffer,
+  { id: string; status: 0 | 1 },
+  { extra: AxiosInstance }
+>(
+  'data/toggleFavorite',
+  async ({ id, status }, { extra: api }) => {
+    const {data} = await api.post<TOffer>(`favorite/${id}/${status}`);
+    return data;
+  }
+);
+
+export const fetchOffersAction = createAsyncThunk<void, undefined, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance;
 }>(
-  'data/fetchQuestions',
+  'data/fetchOffers',
   async (_arg, {dispatch, extra: api}) => {
     dispatch(setOffersLoadingStatus(true));
     const {data} = await api.get<TOffer[]>(APIRoute.Offers);
     dispatch(setOffersLoadingStatus(false));
     dispatch(loadOffers(data));
+  },
+);
+
+export const fetchFavoritesAction = createAsyncThunk<void, undefined, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'data/fetchFavorites',
+  async (_arg, {dispatch, extra: api}) => {
+    dispatch(setOffersLoadingStatus(true));
+    const {data} = await api.get<TOffer[]>(APIRoute.Favorite);
+    dispatch(setOffersLoadingStatus(false));
+    dispatch(loadFavorite(data));
   },
 );
 
@@ -46,6 +71,8 @@ export const loginAction = createAsyncThunk<void, AuthData, {
     const {data: {token}} = await api.post<UserData>(APIRoute.Login, {email, password});
     saveToken(token);
     dispatch(requireAuthorization(AuthorizationStatus.Auth));
+    localStorage.setItem('user-auth-data', JSON.stringify(email));
+    dispatch(saveAuthInfo(email));
     dispatch(redirectToRoute(AppRoute.Root));
   },
 );
@@ -59,6 +86,8 @@ export const logoutAction = createAsyncThunk<void, undefined, {
   async (_arg, {dispatch, extra: api}) => {
     await api.delete(APIRoute.Logout);
     dropToken();
+    localStorage.removeItem('user-auth-data');
+    dispatch(saveAuthInfo(null));
     dispatch(requireAuthorization(AuthorizationStatus.NoAuth));
   },
 );

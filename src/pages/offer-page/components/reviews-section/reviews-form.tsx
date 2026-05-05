@@ -6,10 +6,10 @@ type TChangeHandler = ReactEventHandler<HTMLInputElement | HTMLTextAreaElement>
 
 type urlIdProps = {
   urlId: string | undefined;
-  fetchComments: () => Promise<void>;
+  onSuccess: () => void;
 }
 
-const ReviewsForm = ({urlId, fetchComments}: urlIdProps) => {
+const ReviewsForm = ({urlId, onSuccess}: urlIdProps) => {
   const [review, setReview] = useState({rating: 0, review: ''});
   const [isSending, setIsSending] = useState(false);
 
@@ -35,9 +35,9 @@ const ReviewsForm = ({urlId, fetchComments}: urlIdProps) => {
       });
 
       setReview({ rating: 0, review: '' });
-      void fetchComments();
     } finally {
       setIsSending(false);
+      onSuccess();
     }
   };
 

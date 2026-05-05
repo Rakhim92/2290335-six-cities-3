@@ -1,17 +1,16 @@
 import {AuthorizationStatus} from '../../../../const';
-import { useAppSelector } from '../../../../hooks';
-import {TComment} from '../../../../types';
+import {useAppSelector} from '../../../../hooks';
 import ReviewsForm from './reviews-form';
 import ReviewsList from './reviews-list';
 
 type TCommentsProps = {
-  comments: TComment[] | null;
   urlId: string | undefined;
-  fetchComments: () => Promise<void>;
+  onSuccess: () => void;
 }
 
-const ReviewsSection = ({comments, urlId, fetchComments}: TCommentsProps):JSX.Element => {
+const ReviewsSection = ({urlId, onSuccess}: TCommentsProps):JSX.Element => {
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const comments = useAppSelector((state) => state.comments);
   return (
     <section className="offer__reviews reviews">
       <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount"></span></h2>
@@ -21,7 +20,7 @@ const ReviewsSection = ({comments, urlId, fetchComments}: TCommentsProps):JSX.El
       {authorizationStatus === AuthorizationStatus.Auth ? (
         <ReviewsForm
           urlId = {urlId}
-          fetchComments = {fetchComments}
+          onSuccess = {onSuccess}
         />
       ) : null}
     </section>

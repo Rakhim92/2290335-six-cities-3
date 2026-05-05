@@ -4,9 +4,19 @@ export type State = ReturnType<typeof store.getState>;
 
 export type AppDispatch = typeof store.dispatch;
 
+export type UserData = {
+  id: number;
+  email: string;
+  token: string;
+};
+
+export type AuthData = {
+  login: string;
+  password: string;
+};
 
 export type TOffer = {
-  id: number;
+  id: string;
   title: string;
   type: string;
   price: number;
@@ -26,30 +36,10 @@ export type TOffer = {
   isFavorite: boolean;
   isPremium: boolean;
   rating: number;
-  previewImage: string;
+  previewImage?: string;
 }
 
-export type TOfferExtended = {
-  id: number;
-  title: string;
-  type: string;
-  price: number;
-  city: {
-    name: string;
-    location: {
-      latitude: number;
-      longitude: number;
-      zoom: number;
-    };
-  };
-  location: {
-    latitude: number;
-    longitude: number;
-    zoom: number;
-  };
-  isFavorite: boolean;
-  isPremium: boolean;
-  rating: number;
+export type TOfferExtended = TOffer & {
   description: string;
   bedrooms: number;
   goods: string[];
@@ -61,6 +51,8 @@ export type TOfferExtended = {
   images: [string];
   maxAdults: number;
 }
+
+export type TAnyOffer = TOffer | TOfferExtended;
 
 export type TComment = {
   id: string;
@@ -74,7 +66,7 @@ export type TComment = {
   rating: number;
 };
 
-export type City = {
+export type TCity = {
   name: string;
   location: {
     latitude: number;
@@ -84,35 +76,10 @@ export type City = {
 };
 
 export type MapProps = {
-  city: City;
-  offers: TOffer[] | TOfferExtended[] | null;
-  classNamesForMap: string;
+  city: TCity;
+  offers: TOffer[] | TOfferExtended[] | TAnyOffer[] | null;
+  ClassNamesForMap: string;
   selectedPoint?: TOffer | TOfferExtended;
   selectedOffer?: TOffer | TOfferExtended;
 };
-
-export type UserData = {
-  id: number;
-  email: string;
-  token: string;
-};
-
-export type AuthData = {
-  login: string;
-  password: string;
-};
-
-// export type Point = {
-//   title: string;
-//   lat: number;
-//   lng: number;
-//   zoom : number;
-//   name?: string;
-//   location?: {
-//     latitude: number;
-//     longitude: number;
-//     zoom: number;
-//   };
-// };
-
 

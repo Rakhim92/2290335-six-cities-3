@@ -1,8 +1,8 @@
-import {Link} from 'react-router-dom';
-import {AppRoute} from '../../const';
+import {Link, useNavigate} from 'react-router-dom';
+import {AppRoute, AuthorizationStatus} from '../../const';
 import {TOffer} from '../../types';
-import { store } from '../../store';
-import { changeCurrentOffer } from '../../store/action';
+import {useAppDispatch, useAppSelector} from '../../hooks';
+import {toggleFavoriteAction} from '../../store/api-actions';
 
 type TPlaceCardProps = {
   typeClassName: 'root' | 'offer' | 'favorites';
@@ -23,9 +23,11 @@ const getClassName = (typeClassName: string) => {
   }
 };
 
-
 function PlaceCard({typeClassName, offer, handleHover}: TPlaceCardProps) {
   const {id, title, previewImage, price, isPremium, isFavorite, type, rating} = offer;
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const handleMouseOn = () => {
     handleHover(offer);
   };
@@ -36,14 +38,16 @@ function PlaceCard({typeClassName, offer, handleHover}: TPlaceCardProps) {
     heigthPictureCardImage = 110;
   }
 
+  const handleFavoriteClick = () => {
+    const nextStatus = isFavorite ? 0 : 1;
+    void dispatch(toggleFavoriteAction({ id, status: nextStatus }));
+  };
+
   return (
     <article
       className={`${getClassName(typeClassName)}__card place-card`}
       key={id}
       onMouseEnter={handleMouseOn}
-      onClick={() => {
-        store.dispatch(changeCurrentOffer(id));
-      }}
     >
       {isPremium &&
         <div className="place-card__mark">
@@ -65,7 +69,17 @@ function PlaceCard({typeClassName, offer, handleHover}: TPlaceCardProps) {
             <b className="place-card__price-value">&euro;{price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          <button className={`place-card__bookmark-button button ${isFavorite ? 'place-card__bookmark-button--active' : ''}`} type="button">
+          <button className={`place-card__bookmark-button button
+            ${isFavorite ? 'place-card__bookmark-button--active' : ''}`}
+          type="button"
+          onClick={() => {
+            if (authorizationStatus === AuthorizationStatus.NoAuth) {
+              navigate(AppRoute.Login);
+            } else {
+              handleFavoriteClick();
+            }
+          }}
+          >
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
             </svg>
@@ -79,7 +93,7 @@ function PlaceCard({typeClassName, offer, handleHover}: TPlaceCardProps) {
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href="#">{title}</a>
+          <Link to={`${AppRoute.Offer}/${id}`}>{title}</Link>
         </h2>
         <p className="place-card__type">{type}</p>
       </div>

@@ -1,42 +1,50 @@
-import {useCallback, useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
-import {useAppSelector} from '../../hooks';
+import {useEffect, useMemo, useState} from 'react';
+import {useNavigate, useParams} from 'react-router-dom';
+import {useAppDispatch, useAppSelector} from '../../hooks';
 import {TOffer, TOfferExtended, TComment} from '../../types';
 import {OfferInside} from './components/offer-inside';
 import {OfferHost} from './components/offer-host';
-import {classNamesForMap} from '../../const';
+import {ClassNamesForMap, AppRoute, AuthorizationStatus} from '../../const';
 import {api} from '../../store';
-import NotFoundedPage from '../not-founded-page/not-founded-page';
+import NotFoundPage from '../not-found-page/not-found-page';
 import ReviewsSection from './components/reviews-section/reviews-section';
 import NearPlacesSection from './components/near-places-section';
 import Map from '../../components/map/map';
 import LoadingScreen from '../../components/loading-screen/loading-screen';
+import {toggleFavoriteAction} from '../../store/api-actions';
+import {loadComments, loadOtherOffers} from '../../store/action';
 
-const LIMIT_PICTURES = 3;
+const ANOTHER_OFFERS_LIMIT = 3;
+const PICTURES_LIMIT = 6;
 
 function OfferPage(): JSX.Element {
+  const {id: urlId} = useParams<{ id: string }>();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const currentCity = useAppSelector((state) => state.currentCity);
-  const offers = useAppSelector((state) => state.offers);
-  const {id} = useParams<{ id: string }>();
-  const urlId = id;
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
   const [offer, setOffer] = useState<TOfferExtended | null>(null);
-  const [comments, setComments] = useState<TComment[] | null>(null);
   const [nearbyOffers, setNearbyOffers] = useState<TOffer[] | null>(null);
   const [, setActiveOffer] = useState<TOffer | undefined>();
   const [isLoading, setIsLoading] = useState(true);
-  const normalOffer = offers.find((item) => item.id.toString() === urlId);
-  const offersByLimitPictures = nearbyOffers?.slice(0, LIMIT_PICTURES);
-  if (offersByLimitPictures && normalOffer) {
-    offersByLimitPictures.push(normalOffer);
-  }
 
-  const fetchComments = useCallback(async () => {
+  const updateComments = () => {
     if (!urlId) {
       return;
     }
-    const { data: commentsData } = await api.get<TComment[]>(`comments/${urlId}`);
-    setComments(commentsData);
-  },[urlId]);
+    const fetchNewComments = async () => {
+      const { data } = await api.get<TComment[]>(`comments/${urlId}`);
+      dispatch(loadComments(data));
+    };
+    void fetchNewComments();
+  };
+
+  const offersForMap = useMemo(() => {
+    if (!nearbyOffers || !offer) {
+      return [];
+    }
+    return [...nearbyOffers.slice(0, ANOTHER_OFFERS_LIMIT), offer];
+  }, [nearbyOffers, offer]);
 
   useEffect(() => {
     if (!urlId) {
@@ -44,48 +52,67 @@ function OfferPage(): JSX.Element {
     }
     let isMounted = true;
 
-    (async () => {
-      try {
-        setIsLoading(true);
-        const { data: currentOfferData } = await api.get<TOfferExtended>(`offers/${urlId}`);
-        const { data: nearbyOffersData } = await api.get<TOffer[]>(`offers/${urlId}/nearby`);
-        await fetchComments();
+    Promise.all([
+      api.get<TOfferExtended>(`offers/${urlId}`),
+      api.get<TOffer[]>(`offers/${urlId}/nearby`),
+      api.get<TComment[]>(`comments/${urlId}`)
+    ])
+      .then(([offerData, nearbyData, commentsData]) => {
         if (isMounted) {
-          setOffer(currentOfferData);
-          setNearbyOffers(nearbyOffersData);
+          setOffer(offerData.data);
+          dispatch(loadOtherOffers(nearbyData.data));
+          setNearbyOffers(nearbyData.data);
+          dispatch(loadComments(commentsData.data));
         }
-      } finally {
+      })
+      .catch(() => {
+        if (isMounted) {
+          setOffer(null);
+        }
+      })
+      .finally(() => {
         if (isMounted) {
           setIsLoading(false);
         }
-      }
-    })();
+      });
 
     return () => {
       isMounted = false;
     };
-  }, [urlId, fetchComments]);
+  }, [urlId, dispatch]);
 
   const handleHover = (selectedOffer?: TOffer) => {
     setActiveOffer(selectedOffer);
   };
 
   if (isLoading) {
-    return <LoadingScreen />;
+    return <LoadingScreen/>;
   }
 
   if (!offer) {
-    return <NotFoundedPage />;
+    return <NotFoundPage/>;
   }
 
-  const { title, type, price, isFavorite, isPremium, rating, description, bedrooms, host, goods, images, maxAdults} = offer;
+  const {title, type, price, isFavorite, isPremium, rating, description, bedrooms, host, goods, images, maxAdults, id} = offer;
+
+  const handleFavoriteClick = async () => {
+    if (authorizationStatus !== AuthorizationStatus.Auth) {
+      navigate(AppRoute.Login);
+      return;
+    }
+    const nextStatus = isFavorite ? 0 : 1;
+    const resultAction = await dispatch(toggleFavoriteAction({id, status: nextStatus}));
+    if (toggleFavoriteAction.fulfilled.match(resultAction)) {
+      setOffer(resultAction.payload as TOfferExtended);
+    }
+  };
 
   return (
     <main className="page__main page__main--offer">
       <section className="offer">
         <div className="offer__gallery-container container">
           <div className="offer__gallery">
-            {images.map((item) => (
+            {images.slice(0, PICTURES_LIMIT).map((item) => (
               <div className="offer__image-wrapper"
                 key={item}
               >
@@ -105,14 +132,22 @@ function OfferPage(): JSX.Element {
             )}
             <div className="offer__name-wrapper">
               <h1 className="offer__name">{title}</h1>
-              {isFavorite && (
-                <button className="offer__bookmark-button button" type="button">
-                  <svg className="offer__bookmark-icon" width="31" height="33">
-                    <use xlinkHref="#icon-bookmark"/>
-                  </svg>
-                  <span className="visually-hidden">To bookmarks</span>
-                </button>
-              )}
+              <button
+                className={`offer__bookmark-button button
+                  ${isFavorite ? 'offer__bookmark-button--active' : ''}`}
+                type="button"
+                onClick={() => {
+                  handleFavoriteClick();
+                }}
+              >
+                <svg className="offer__bookmark-icon"
+                  width="31"
+                  height="33"
+                >
+                  <use xlinkHref="#icon-bookmark"/>
+                </svg>
+                <span className="visually-hidden">To bookmarks</span>
+              </button>
             </div>
             <div className="offer__rating rating">
               <div className="offer__stars rating__stars">
@@ -138,27 +173,24 @@ function OfferPage(): JSX.Element {
               description = {description}
             />
             <ReviewsSection
-              fetchComments = {fetchComments}
-              comments = {comments}
               urlId = {urlId}
+              onSuccess={updateComments}
             />
           </div>
         </div>
 
-        {offersByLimitPictures &&
+        {offersForMap &&
           <Map
-            offers = {offersByLimitPictures}
+            offers = {offersForMap}
             city = {currentCity}
             selectedPoint = {offer}
-            classNamesForMap = {classNamesForMap.Offer}
+            ClassNamesForMap = {ClassNamesForMap.Offer}
           />}
       </section>
 
-      {offersByLimitPictures &&
-        <NearPlacesSection
-          handleHover = {handleHover}
-          otherOffers = {offersByLimitPictures.slice(0, LIMIT_PICTURES)}
-        />}
+      <NearPlacesSection
+        handleHover = {handleHover}
+      />
     </main>
   );
 }

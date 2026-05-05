@@ -12,3 +12,4 @@ export const changeOffers = createAction<TOffer[]>('offers/changeOffers');
 export const changeCurrentOffer = createAction<TOffer | TOfferExtended>('offer/changeCurrentOffer');
 export const loadFavorite = createAction<TOffer[]>('data/favorites');
 export const loadComments = createAction<TComment[]>('data/comments');
+export const loadOtherOffers = createAction<TOffer[]>('data/otherOffers');

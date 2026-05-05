@@ -12,19 +12,19 @@ import NearPlacesSection from './components/near-places-section';
 import Map from '../../components/map/map';
 import LoadingScreen from '../../components/loading-screen/loading-screen';
 import { toggleFavoriteAction } from '../../store/api-actions';
-import { loadComments } from '../../store/action';
+import { loadComments, loadOtherOffers } from '../../store/action';
 
-const LIMIT_PICTURES = 3;
+const ANOTHER_OFFERS_LIMIT = 3;
+const PICTURES_LIMIT = 6;
 
 function OfferPage(): JSX.Element {
   const {id: urlId} = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  // const anotherOffers = useAppSelector((state) => state.offers);
+  const anotherOffers = useAppSelector((state) => state.offers);
   const currentCity = useAppSelector((state) => state.currentCity);
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
   const [offer, setOffer] = useState<TOfferExtended | null>(null);
-  // const [comments, setComments] = useState<TComment[] | null>(null);
   const [nearbyOffers, setNearbyOffers] = useState<TOffer[] | null>(null);
   const [, setActiveOffer] = useState<TOffer | undefined>();
   const [isLoading, setIsLoading] = useState(true);
@@ -33,12 +33,10 @@ function OfferPage(): JSX.Element {
     if (!urlId) {
       return;
     }
-
     const fetchNewComments = async () => {
       const { data } = await api.get<TComment[]>(`comments/${urlId}`);
       dispatch(loadComments(data));
     };
-
     void fetchNewComments();
   };
 
@@ -46,7 +44,7 @@ function OfferPage(): JSX.Element {
     if (!nearbyOffers || !offer) {
       return [];
     }
-    return [...nearbyOffers.slice(0, LIMIT_PICTURES), offer];
+    return [...nearbyOffers.slice(0, ANOTHER_OFFERS_LIMIT), offer];
   }, [nearbyOffers, offer]);
 
   useEffect(() => {
@@ -63,6 +61,7 @@ function OfferPage(): JSX.Element {
       .then(([offerData, nearbyData, commentsData]) => {
         if (isMounted) {
           setOffer(offerData.data);
+          dispatch(loadOtherOffers(nearbyData.data));
           setNearbyOffers(nearbyData.data);
           dispatch(loadComments(commentsData.data));
         }
@@ -114,7 +113,7 @@ function OfferPage(): JSX.Element {
       <section className="offer">
         <div className="offer__gallery-container container">
           <div className="offer__gallery">
-            {images.map((item) => (
+            {images.slice(0, PICTURES_LIMIT).map((item) => (
               <div className="offer__image-wrapper"
                 key={item}
               >
@@ -190,11 +189,9 @@ function OfferPage(): JSX.Element {
           />}
       </section>
 
-      {offersForMap &&
-        <NearPlacesSection
-          handleHover = {handleHover}
-          otherOffers = {nearbyOffers?.slice(0, LIMIT_PICTURES) || []}
-        />}
+      <NearPlacesSection
+        handleHover = {handleHover}
+      />
     </main>
   );
 }

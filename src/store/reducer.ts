@@ -1,5 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {changeCurrentCity, changeOffers, loadOffers, requireAuthorization, setOffersLoadingStatus, changeCurrentOffer, saveAuthInfo, loadFavorite, loadComments} from './action';
+import {changeCurrentCity, changeOffers, loadOffers, requireAuthorization, setOffersLoadingStatus, changeCurrentOffer, saveAuthInfo, loadFavorite, loadComments, loadOtherOffers} from './action';
 import {TCity, TOffer, TOfferExtended, TComment} from '../types';
 import {MY_CITIES, AuthorizationStatus} from '../const';
 import { toggleFavoriteAction } from './api-actions';
@@ -18,6 +18,7 @@ type TInitialState = {
   favorites: TOffer[];
   authInfo: string | null;
   comments: TComment[];
+  otherOffers: TOffer[];
 }
 
 const initialState: TInitialState = {
@@ -28,7 +29,8 @@ const initialState: TInitialState = {
   currentOffer: null,
   favorites: [],
   authInfo: getSavedAuthInfo(),
-  comments: []
+  comments: [],
+  otherOffers: []
 };
 
 const reducer = createReducer(initialState, (builder) => {
@@ -59,6 +61,9 @@ const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(loadComments, (state, action) => {
       state.comments = action.payload;
+    })
+    .addCase(loadOtherOffers, (state, action) => {
+      state.otherOffers = action.payload;
     })
     .addCase(toggleFavoriteAction.fulfilled, (state, action) => {
       const updatedOffer = action.payload;

@@ -11,8 +11,8 @@ import ReviewsSection from './components/reviews-section/reviews-section';
 import NearPlacesSection from './components/near-places-section';
 import Map from '../../components/map/map';
 import LoadingScreen from '../../components/loading-screen/loading-screen';
-import { toggleFavoriteAction } from '../../store/api-actions';
-import { loadComments, loadOtherOffers } from '../../store/action';
+import {toggleFavoriteAction} from '../../store/api-actions';
+import {loadComments, loadOtherOffers} from '../../store/action';
 
 const ANOTHER_OFFERS_LIMIT = 3;
 const PICTURES_LIMIT = 6;
@@ -21,7 +21,6 @@ function OfferPage(): JSX.Element {
   const {id: urlId} = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const anotherOffers = useAppSelector((state) => state.offers);
   const currentCity = useAppSelector((state) => state.currentCity);
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
   const [offer, setOffer] = useState<TOfferExtended | null>(null);

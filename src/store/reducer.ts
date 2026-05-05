@@ -71,14 +71,19 @@ const reducer = createReducer(initialState, (builder) => {
       const offerIndex = state.offers.findIndex((item) => item.id === updatedOffer.id);
       if (offerIndex !== -1) {
         state.offers[offerIndex] = updatedOffer;
+      }
+
+      const otherIndex = state.otherOffers.findIndex((item) => item.id === updatedOffer.id);
+      if (otherIndex !== -1) {
+        state.otherOffers[otherIndex] = updatedOffer;
+      }
+
+      if (state.currentOffer?.id === updatedOffer.id) {
         state.currentOffer = updatedOffer;
       }
 
       if (updatedOffer.isFavorite) {
-        const hasFavorite = state.favorites.some((item) => item === updatedOffer);
-        if (!hasFavorite) {
-          state.favorites.push(updatedOffer);
-        }
+        state.favorites.push(updatedOffer);
       } else {
         state.favorites = state.favorites.filter((item) => item.id !== updatedOffer.id);
       }

@@ -25,8 +25,8 @@ const ReviewsItem = ({review}: TCommentProp):JSX.Element => {
             <span className="visually-hidden"/>Rating
           </div>
         </div>
-        <p className="reviews__text"/>{comment}
-        <time className="reviews__time" dateTime={`${date}`}/>April 2019
+        <p className="reviews__text">{comment}</p>
+        <time className="reviews__time" dateTime={`${date}`}>April 2019</time>
       </div>
     </li>
   );

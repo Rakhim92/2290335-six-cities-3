@@ -6,9 +6,10 @@ type TChangeHandler = ReactEventHandler<HTMLInputElement | HTMLTextAreaElement>
 
 type urlIdProps = {
   urlId: string | undefined;
+  onSuccess: () => void;
 }
 
-const ReviewsForm = ({urlId}: urlIdProps) => {
+const ReviewsForm = ({urlId, onSuccess}: urlIdProps) => {
   const [review, setReview] = useState({rating: 0, review: ''});
   const [isSending, setIsSending] = useState(false);
 
@@ -36,6 +37,7 @@ const ReviewsForm = ({urlId}: urlIdProps) => {
       setReview({ rating: 0, review: '' });
     } finally {
       setIsSending(false);
+      onSuccess();
     }
   };
 

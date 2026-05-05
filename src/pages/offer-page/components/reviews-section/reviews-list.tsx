@@ -5,7 +5,7 @@ type TCommentsProps = {
   comments: TComment[] | null;
 }
 
-const ReviewsList = ({comments}: TCommentsProps) => (
+const ReviewsList = ({comments}:TCommentsProps) => (
   comments !== null ? (
     <ul className="reviews__list">
       {comments.map((review) => (
@@ -14,6 +14,5 @@ const ReviewsList = ({comments}: TCommentsProps) => (
     </ul>
   ) : ''
 );
-
 
 export default ReviewsList;

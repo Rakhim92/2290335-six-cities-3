@@ -1,5 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
-import {TCity, TOffer, TOfferExtended} from '../types';
+import {TCity, TOffer, TOfferExtended, TComment} from '../types';
 import {AuthorizationStatus, AppRoute} from '../const';
 
 export const requireAuthorization = createAction<AuthorizationStatus>('user/requireAuthorization');
@@ -11,3 +11,4 @@ export const changeCurrentCity = createAction<TCity>('city/changeCurrentCity');
 export const changeOffers = createAction<TOffer[]>('offers/changeOffers');
 export const changeCurrentOffer = createAction<TOffer | TOfferExtended>('offer/changeCurrentOffer');
 export const loadFavorite = createAction<TOffer[]>('data/favorites');
+export const loadComments = createAction<TComment[]>('data/comments');

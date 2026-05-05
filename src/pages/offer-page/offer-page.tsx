@@ -12,6 +12,7 @@ import NearPlacesSection from './components/near-places-section';
 import Map from '../../components/map/map';
 import LoadingScreen from '../../components/loading-screen/loading-screen';
 import { toggleFavoriteAction } from '../../store/api-actions';
+import { loadComments } from '../../store/action';
 
 const LIMIT_PICTURES = 3;
 
@@ -23,10 +24,23 @@ function OfferPage(): JSX.Element {
   const currentCity = useAppSelector((state) => state.currentCity);
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
   const [offer, setOffer] = useState<TOfferExtended | null>(null);
-  const [comments, setComments] = useState<TComment[] | null>(null);
+  // const [comments, setComments] = useState<TComment[] | null>(null);
   const [nearbyOffers, setNearbyOffers] = useState<TOffer[] | null>(null);
   const [, setActiveOffer] = useState<TOffer | undefined>();
   const [isLoading, setIsLoading] = useState(true);
+
+  const updateComments = () => {
+    if (!urlId) {
+      return;
+    }
+
+    const fetchNewComments = async () => {
+      const { data } = await api.get<TComment[]>(`comments/${urlId}`);
+      dispatch(loadComments(data));
+    };
+
+    void fetchNewComments();
+  };
 
   const offersForMap = useMemo(() => {
     if (!nearbyOffers || !offer) {
@@ -50,12 +64,12 @@ function OfferPage(): JSX.Element {
         if (isMounted) {
           setOffer(offerData.data);
           setNearbyOffers(nearbyData.data);
-          setComments(commentsData.data);
+          dispatch(loadComments(commentsData.data));
         }
       })
       .catch(() => {
         if (isMounted) {
-          setOffer(null); // Это триггернет NotFoundPage
+          setOffer(null);
         }
       })
       .finally(() => {
@@ -67,7 +81,7 @@ function OfferPage(): JSX.Element {
     return () => {
       isMounted = false;
     };
-  }, [urlId]);
+  }, [urlId, dispatch]);
 
   const handleHover = (selectedOffer?: TOffer) => {
     setActiveOffer(selectedOffer);
@@ -161,8 +175,8 @@ function OfferPage(): JSX.Element {
               description = {description}
             />
             <ReviewsSection
-              comments = {comments}
               urlId = {urlId}
+              onSuccess={updateComments}
             />
           </div>
         </div>

@@ -25,7 +25,6 @@ function OfferPage(): JSX.Element {
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
   const [offer, setOffer] = useState<TOfferExtended | null>(null);
   const [nearbyOffers, setNearbyOffers] = useState<TOffer[] | null>(null);
-  const [, setActiveOffer] = useState<TOffer | undefined>();
   const [isLoading, setIsLoading] = useState(true);
 
   const updateComments = () => {
@@ -80,10 +79,6 @@ function OfferPage(): JSX.Element {
       isMounted = false;
     };
   }, [urlId, dispatch]);
-
-  const handleHover = (selectedOffer?: TOffer) => {
-    setActiveOffer(selectedOffer);
-  };
 
   if (isLoading) {
     return <LoadingScreen/>;
@@ -188,9 +183,7 @@ function OfferPage(): JSX.Element {
           />}
       </section>
 
-      <NearPlacesSection
-        handleHover = {handleHover}
-      />
+      <NearPlacesSection/>
     </main>
   );
 }

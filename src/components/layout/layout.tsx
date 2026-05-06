@@ -3,6 +3,7 @@ import {AppRoute, AuthorizationStatus} from '../../const';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {logoutAction} from '../../store/api-actions';
 
+
 const getLayoutState = (pathname: AppRoute, favoriteCount: number) => {
   let rootClassName = '';
   let linkClassName = '';

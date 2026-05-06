@@ -2,6 +2,8 @@ import {useMemo, useState} from 'react';
 import PlaceCardsList from '../../components/place-card/place-cards-list';
 import {TOffer} from '../../types';
 import {useAppSelector} from '../../hooks';
+import {AppRoute} from '../../const';
+import { Link } from 'react-router-dom';
 
 type GroupedOffers = Record<string, TOffer[]>;
 
@@ -35,9 +37,9 @@ const FavoritePage = (): JSX.Element => {
               <li className="favorites__locations-items" key={cityName}>
                 <div className="favorites__locations locations locations--current">
                   <div className="locations__item">
-                    <a className="locations__item-link" href="#">
+                    <Link className="locations__item-link" to={AppRoute.Root}>
                       <span>{cityName}</span>
-                    </a>
+                    </Link>
                   </div>
                 </div>
                 <PlaceCardsList
